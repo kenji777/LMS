@@ -9935,7 +9935,7 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
         try {
             // DialogManager를 통해 모든 다이얼로그 정리
             if (dialogManager != null) {
-                dialogManager.dismissAllDialogs();
+                dialogManager.cleanup();
             }
 
             // Bluetooth ConnectedThread 정리
