@@ -34,7 +34,6 @@ import android.graphics.Color;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
@@ -45,7 +44,6 @@ import android.os.Message;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -115,14 +113,11 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import itf.com.app.lms.conn.bluetooth.BluetoothManager;
 import itf.com.app.lms.conn.network.NetworkManager;
-import itf.com.app.lms.conn.usb.UsbConnectionManager;
+import itf.com.app.lms.conn.usb.UsbPollingController;
 import itf.com.app.lms.managers.TimerManager;
 import itf.com.app.lms.managers.PermissionManager;
 import itf.com.app.lms.services.LoggingService;
@@ -136,8 +131,14 @@ import itf.com.app.lms.kiosk.BaseKioskActivity;
 import itf.com.app.lms.util.ConnectedThreadOptimized;
 import itf.com.app.lms.util.Constants;
 import itf.com.app.lms.util.DialogManager;
+import itf.com.app.lms.util.RequestTestTaskThreadAsync;
+import itf.com.app.lms.util.RequestThreadAsync;
+import itf.com.app.lms.util.RequestVersionInfoThreadAsync;
+import itf.com.app.lms.util.SpecProcessingResult;
 import itf.com.app.lms.util.StringResourceManager;
 import itf.com.app.lms.util.TestData;
+import itf.com.app.lms.util.UiBundleApplier;
+import itf.com.app.lms.util.UiUpdateBundle;
 import itf.com.app.lms.util.UsbCommandQueue;
 import itf.com.app.lms.util.UsbService;
 import itf.com.app.lms.util.WattValueAnimator;
@@ -323,6 +324,7 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
 
     // ViewBinding: findViewById 호출 제거 및 성능 최적화
     private ActivityMainBinding binding;
+    private UiBundleApplier uiBundleApplier;
 
     // UI 업데이트 배치 처리를 위한 변수 (Phase 1: 배치 처리 시스템 구현)
     private final List<Runnable> pendingUiUpdates = new ArrayList<>();
@@ -346,28 +348,11 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
     private final String datetimeFormat = Constants.DateTimeFormats.DATETIME_FORMAT;
     private final String timestampFormat = Constants.DateTimeFormats.TIMESTAMP_FORMAT;
 
-    private final ScheduledExecutorService usbPollingExecutor = Executors.newSingleThreadScheduledExecutor(r -> {
-        Thread thread = new Thread(r, "UsbPolling");
-        thread.setPriority(Thread.NORM_PRIORITY - 2);
-        thread.setDaemon(true);
-        return thread;
-    });
-    private ScheduledFuture<?> usbPollingFuture = null;
-    private long usbPollingIntervalMs = Constants.Timeouts.USB_TIMER_INTERVAL_MS;
-    private volatile boolean usbPollingEnabled = false;
-    private int usbPollingFailureCount = 0;
-    private static final int USB_POLLING_FAILURE_THRESHOLD = 5;
-    private static final long USB_POLLING_BACKOFF_MS = Constants.Timeouts.USB_TIMER_INTERVAL_MS * 5;
     private static final long USB_PERMISSION_RECOVERY_DELAY_MS = 1000L;
-    private boolean usbPollingRequested = false;
     private final Handler usbRecoveryHandler = new Handler(Looper.getMainLooper());
     private Runnable usbPermissionRecoveryRunnable = null;
-    private final Handler usbReconnectHandler = new Handler(Looper.getMainLooper());
-    private boolean isUsbReconnecting = false;
-    private int usbReconnectAttempts = 0;
-    private Runnable usbReconnectRunnable = null;
-    private static final int USB_RETRY_MAX_ATTEMPTS = 10;
     private static final int BT_RETRY_MAX_ATTEMPTS = 3;
+    private UsbPollingController usbPollingController;
 
 
     static private final String decTemperature = "";
@@ -1822,7 +1807,9 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
             String testCheckValue = testItem.getTest_result_check_value();
 
             // 검사 결과 카운트 업데이트
-            recalcTestCountsFromAdapter(listItemAdapter);
+            if (uiBundleApplier != null) {
+                uiBundleApplier.recalcTestCounts(listItemAdapter);
+            }
 
             // 검사 결과 다이얼로그 표시
             scheduleUiUpdate(() -> {
@@ -2071,13 +2058,13 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
 
     String urlStr = "";
     String urlTestTaskStr = "";
-    ActivityModelTestProcess.RequestTestTaskThreadAsync testTaskThread = null;
+    RequestTestTaskThreadAsync testTaskThread = null;
     static String urlStrBarcode = "";
 
     // HTTP Handler 배치 처리를 위한 디바운싱 변수
-    private static final Object HTTP_HANDLER_LOCK = new Object();
+    static final Object HTTP_HANDLER_LOCK = new Object();
     private Runnable pendingHttpTask = null;
-    private static final long HTTP_DEBOUNCE_DELAY_MS = 100; // 100ms 디바운스
+    static final long HTTP_DEBOUNCE_DELAY_MS = 100; // 100ms 디바운스
 
     // private WebServer server;
     public static final int WS_PORT = 8080;
@@ -2326,8 +2313,8 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
             if (controlRequestAccessHandler != null) {
                 controlRequestAccessHandler.removeCallbacksAndMessages(null);
             }
-            if (usbReconnectHandler != null) {
-                usbReconnectHandler.removeCallbacksAndMessages(null);
+            if (usbPollingController != null) {
+                usbPollingController.clearReconnectCallbacks();
             }
             if (usbRecoveryHandler != null) {
                 usbRecoveryHandler.removeCallbacksAndMessages(null);
@@ -2381,16 +2368,8 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
                 }
             }
 
-            if (usbPollingExecutor != null && !usbPollingExecutor.isShutdown()) {
-                usbPollingExecutor.shutdownNow();
-                try {
-                    if (!usbPollingExecutor.awaitTermination(2, java.util.concurrent.TimeUnit.SECONDS)) {
-                        logWarn(LogManager.LogCategory.US, "usbPollingExecutor did not terminate within timeout");
-                    }
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    logWarn(LogManager.LogCategory.US, "Interrupted while waiting for usbPollingExecutor termination");
-                }
+            if (usbPollingController != null) {
+                usbPollingController.shutdown();
             }
             // ========== End Executor Cleanup ==========
 
@@ -2755,6 +2734,111 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
             testProcessId = Constants.InitialValues.TEST_PROCESS_ID;
 
             tv_log.setMovementMethod(ScrollingMovementMethod.getInstance());
+
+            uiBundleApplier = new UiBundleApplier(
+                    clDialogForPreprocess,
+                    tvDialogMessage,
+                    trPreprocessContent,
+                    tvCurrentProcess,
+                    tvTemperature,
+                    tvCompWattValue,
+                    tvPopupProcessResultCompValue,
+                    tvHeaterWattValue,
+                    tvPopupProcessResultHeaterValue,
+                    tvPumpWattValue,
+                    tv_log,
+                    tvTestOkCnt,
+                    tvTestNgCnt,
+                    (okCount, ngCount) -> {
+                        testOkCnt = okCount;
+                        testNgCnt = ngCount;
+                    }
+            );
+
+            usbPollingController = new UsbPollingController(
+                    new UsbPollingController.Dependencies() {
+                        @Override
+                        public void logInfo(LogManager.LogCategory category, String message) {
+                            ActivityModelTestProcess.this.logInfo(category, message);
+                        }
+
+                        @Override
+                        public void logWarn(LogManager.LogCategory category, String message) {
+                            ActivityModelTestProcess.this.logWarn(category, message);
+                        }
+
+                        @Override
+                        public void logDebug(LogManager.LogCategory category, String message) {
+                            ActivityModelTestProcess.this.logDebug(category, message);
+                        }
+
+                        @Override
+                        public void logError(LogManager.LogCategory category, String message, Throwable throwable) {
+                            ActivityModelTestProcess.this.logError(category, message, throwable);
+                        }
+
+                        @Override
+                        public void scheduleUsbPermissionRecovery() {
+                            ActivityModelTestProcess.this.scheduleUsbPermissionRecovery();
+                        }
+
+                        @Override
+                        public void updateUsbLampDisconnected() {
+                            ActivityModelTestProcess.this.updateUsbLampDisconnected();
+                        }
+
+                        @Override
+                        public void updateUsbLampReconnecting() {
+                            ActivityModelTestProcess.this.updateUsbLampReconnecting();
+                        }
+
+                        @Override
+                        public void updateUsbLampReady() {
+                            ActivityModelTestProcess.this.updateUsbLampReady();
+                        }
+
+                        @Override
+                        public void onUsbReconnectFailed() {
+                            scheduleUiUpdate(() -> {
+                                updateUsbLampDisconnected();
+                                clAlert.setVisibility(VISIBLE);
+                                tvAlertMessage.setText("USB \ub610\ub294 \ube14\ub8e8\ud22c\uc2a4 \uc5f0\uacb0\uc744 \ud655\uc778\ud574\uc8fc\uc138\uc694.");
+                                resetBluetoothSessionKeepUsb();
+                            });
+                        }
+
+                        @Override
+                        public void startUsbService() {
+                            setFilters();
+                            startService(UsbService.class, usbConnection, null);
+                        }
+
+                        @Override
+                        public boolean isUsbPermissionGranted() {
+                            return usbConnPermissionGranted;
+                        }
+
+                        @Override
+                        public UsbService getUsbService() {
+                            return usbService;
+                        }
+
+                        @Override
+                        public UsbCommandQueue getUsbCommandQueue() {
+                            return usbCommandQueue;
+                        }
+
+                        @Override
+                        public void setUsbCommandQueue(UsbCommandQueue queue) {
+                            usbCommandQueue = queue;
+                        }
+                    },
+                    Constants.Timeouts.USB_TIMER_INTERVAL_MS,
+                    Constants.Timeouts.USB_TIMER_INTERVAL_MS * 5,
+                    USB_PERMISSION_RECOVERY_DELAY_MS,
+                    10
+            );
+
 
             // HTTP 통신 관련 runOnUiThread 최적화: scheduleUiUpdate 사용
             ActivityModelTestProcess activity = getMainActivity();
@@ -4165,7 +4249,7 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
                                             decElectricValueList.insert(0, "&clm_watt_log=");
                                         }
 
-                                        testTaskThread = new ActivityModelTestProcess.RequestTestTaskThreadAsync(ActivityModelTestProcess.this);
+                                        testTaskThread = new RequestTestTaskThreadAsync(ActivityModelTestProcess.this);
                                         urlTestTaskStr = "http://" + serverIp + "/OVIO/TestTaskInfoUpdate.jsp" + "?clm_test_task_log=" + URLEncoder.encode(log_text_param) + "&clm_test_unit_seq=" + unit_no + "&clm_unit_ip=" + ipAddress + "&clm_product_serial_no=" + productSerialNo + "&clm_test_process_id=" + testProcessId + "&clm_model_id=" + globalModelId + decElectricValueList;
 
                                         testProcessId = (finalReceiveCommand.contains(Constants.TestItemCodes.RE0101)) ? "" : testProcessId;
@@ -4695,7 +4779,9 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
                                                     // logInfo(LogManager.LogCategory.PS, String.format(Constants.LogMessages.FINISHED_RESTART_APP_TERMINATION + Constants.Common.EMPTY_STRING + "[%d / %d]", restartCntFinished, restartCntMargin));
                                                     if (restartCntFinished == restartCntMargin) {
                                                         restartCntFinished = 0;
-                                                        usbReconnectAttempts = 0;
+                                                        if (usbPollingController != null) {
+                                                            usbPollingController.resetReconnectAttempts();
+                                                        }
                                                         finishedCorrectly = true;
                                                         // finishApplication(getApplicationContext());
                                                         resetBluetoothSessionKeepUsb();
@@ -5123,7 +5209,7 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
                         if (!specDataLoadedFromCache.get()) {
                             try {
                                 clearHttpHandlerQueue();
-                                new ActivityModelTestProcess.RequestThreadAsync(ActivityModelTestProcess.this).execute();
+                                new RequestThreadAsync(ActivityModelTestProcess.this).execute();
                             } catch (Exception e) {
                                 logError(LogManager.LogCategory.ER, Constants.ErrorMessages.SERVER_CONNECTION_ERROR, e);
                                 clAlert.setVisibility(VISIBLE);
@@ -5138,12 +5224,12 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
                                         localVersionId = arrTestModels[0][3];
                                         localModelVersion = arrTestModels[0][4];
                                     }
-                                    new ActivityModelTestProcess.RequestVersionInfoThreadAsync(ActivityModelTestProcess.this, localVersionId, localModelVersion).execute();
+                                    new RequestVersionInfoThreadAsync(ActivityModelTestProcess.this, localVersionId, localModelVersion).execute();
                                     break;
                                 default:
                                     try {
                                         clearHttpHandlerQueue();
-                                        new ActivityModelTestProcess.RequestThreadAsync(ActivityModelTestProcess.this).execute();
+                                        new RequestThreadAsync(ActivityModelTestProcess.this).execute();
                                     } catch (Exception e) {
                                         logError(LogManager.LogCategory.ER, Constants.ErrorMessages.SERVER_CONNECTION_ERROR, e);
                                         clAlert.setVisibility(VISIBLE);
@@ -5160,7 +5246,7 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
                 scheduleUiUpdate(() -> {
                     try {
                         clearHttpHandlerQueue();
-                        new ActivityModelTestProcess.RequestThreadAsync(ActivityModelTestProcess.this).execute();
+                        new RequestThreadAsync(ActivityModelTestProcess.this).execute();
                     } catch (Exception e) {
                         logError(LogManager.LogCategory.ER, Constants.ErrorMessages.SERVER_CONNECTION_ERROR, e);
                         clAlert.setVisibility(VISIBLE);
@@ -5173,7 +5259,7 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
             scheduleUiUpdate(() -> {
                 try {
                     clearHttpHandlerQueue();
-                    new ActivityModelTestProcess.RequestThreadAsync(ActivityModelTestProcess.this).execute();
+                    new RequestThreadAsync(ActivityModelTestProcess.this).execute();
                 } catch (Exception ex) {
                     logError(LogManager.LogCategory.ER, Constants.ErrorMessages.SERVER_CONNECTION_ERROR, ex);
                 }
@@ -5607,538 +5693,7 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
         }
     }
 
-    // ⚠️ MEMORY LEAK FIX: Changed to static inner class to prevent implicit Activity reference
-    static class RequestThreadAsync extends AsyncTask<String, Void, String> {
-        private final WeakReference<ActivityModelTestProcess> activityRef;
-        private final String url;
-
-        public RequestThreadAsync(ActivityModelTestProcess activity) {
-            this.activityRef = new WeakReference<>(activity);
-            this.url = activity.urlStr;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                new Thread(() -> {
-                    // 동시성 문제 해결: connection을 로컬 변수로 변경 (각 스레드가 자신만의 connection 사용)
-                    HttpURLConnection connection = null;
-                    try {
-                        URL obj = new URL(url);
-                        connection = (HttpURLConnection) obj.openConnection();
-
-                        connection.setReadTimeout(Constants.Timeouts.HTTP_READ_TIMEOUT_LONG_MS);
-                        connection.setConnectTimeout(Constants.Timeouts.HTTP_CONNECT_TIMEOUT_LONG_MS);
-                        connection.setRequestMethod(Constants.HTTP.METHOD_POST);  // POST 방식으로 요청
-                        connection.setDoInput(true);  // InputStream 으로 서버로부터 응답을 받겠다는 옵션
-                        connection.setDoOutput(true); // OutputStream 으로 POST 데이터를 넘겨 주겠다는 옵션
-                        connection.setRequestProperty(Constants.HTTP.HEADER_CONTENT_TYPE, Constants.HTTP.CONTENT_TYPE_JSON);    // application/json 형식으로 전송. (Request body 전달시 application/json 으로 서버에 전달)
-                        connection.setRequestProperty(Constants.HTTP.HEADER_CACHE_CONTROL, Constants.HTTP.CACHE_CONTROL_NO_CACHE);
-
-                        try {
-                            int retCode = connection.getResponseCode();
-                            ActivityModelTestProcess activity = activityRef.get();
-                            if (activity != null) {
-                                activity.logInfo(LogManager.LogCategory.PS, Constants.LogMessages.HTTP_RESPONSE_CODE + retCode);
-                            }
-                            if (retCode == HttpURLConnection.HTTP_OK) {
-                                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                                // BufferedReader() : 엔터만 경계로 인식하고 받은 데이터를 String 으로 고정, Scanner 에 비해 빠름!
-                                // InputStreamReader() : 지정된 문자 집합 내의 문자로 인코딩
-                                // getInputStream() : url 에서 데이터를 읽어옴
-                                try {
-                                    String line = null;
-                                    String lineTmp = null;
-                                    StringBuilder sb = new StringBuilder();
-
-                                    // 무한 루프 방지를 위해 최대 읽기 횟수 제한
-                                    int maxReadCount = Constants.Timeouts.MAX_READ_COUNT;
-                                    int readCount = 0;
-
-                                    while (readCount < maxReadCount) {
-                                        lineTmp = reader.readLine();
-                                        if (lineTmp == null) {
-                                            break; // 스트림 끝에 도달
-                                        }
-                                        readCount++;
-
-                                        if (!lineTmp.trim().equals("")) {
-                                            sb.append(lineTmp);
-                                            line = lineTmp;
-                                        }
-                                    }
-
-                                    // 모든 데이터를 읽은 후 한 번만 처리
-                                    final String data = (line != null && !line.trim().equals("")) ? line :
-                                            (sb.length() > 0 ? sb.toString() : null);
-
-                                    if (data != null && !data.trim().equals("")) {
-                                        final String finalData = data;
-
-                                        // JSON 파싱을 백그라운드에서 직접 실행하여 메인 스레드 부하 최소화
-                                        // 디바운싱을 위해 지연 실행
-                                        ActivityModelTestProcess act = activityRef.get();
-                                        if (act != null) {
-                                            synchronized (HTTP_HANDLER_LOCK) {
-                                                // 이전 작업이 아직 실행되지 않았다면 취소
-                                                if (act.pendingHttpTask != null) {
-                                                    act.schedulerHandler.removeCallbacks(act.pendingHttpTask);
-                                                }
-
-                                                // 새 작업을 백그라운드에서 지연 실행 (디바운싱)
-                                                act.pendingHttpTask = new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        ActivityModelTestProcess a = activityRef.get();
-                                                        if (a == null) return; // Activity destroyed
-
-                                                        // 백그라운드 스레드에서 직접 jsonParsing 호출
-                                                        // jsonParsing 내부에서 이미 Thread를 생성하지만,
-                                                        // 메인 스레드를 거치지 않아 부하가 줄어듭니다
-                                                        try {
-                                                            a.logDebug(LogManager.LogCategory.PS, Constants.LogMessages.PROCESSING_HTTP_RESPONSE_DATA);
-
-                                                            new Thread(() -> {
-                                                                try {
-                                                                    ActivityModelTestProcess a2 = activityRef.get();
-                                                                    if (a2 != null) {
-                                                                        a2.logDebug(LogManager.LogCategory.PS, Constants.LogMessages.DELETING_TEST_SPEC_DATA);
-                                                                        TestData.deleteTestSpecData(a2.getApplicationContext());
-                                                                        a2.logDebug(LogManager.LogCategory.PS, Constants.LogMessages.TEST_SPEC_DATA_DELETED);
-                                                                    }
-                                                                } catch (Exception e) {
-                                                                    Thread.currentThread().interrupt();
-                                                                }
-                                                            }).start();
-
-                                                            a.jsonParsing("test_spec", finalData);
-                                                        } catch (Exception e) {
-                                                            a.logError(LogManager.LogCategory.ER, Constants.ErrorMessages.JSON_PARSING_ERROR, e);
-                                                        } finally {
-                                                            synchronized (HTTP_HANDLER_LOCK) {
-                                                                ActivityModelTestProcess a3 = activityRef.get();
-                                                                if (a3 != null) {
-                                                                    a3.pendingHttpTask = null;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                };
-
-                                                // ⚠️ ANR FIX: Use Handler instead of creating Thread + Thread.sleep
-                                                // 디바운스 지연 후 백그라운드에서 실행 (여러 요청이 동시에 와도 마지막 것만 처리)
-                                                // OLD (WASTEFUL): new Thread(() -> { Thread.sleep(); pendingHttpTask.run(); }).start();
-                                                // NEW (EFFICIENT): Use existing schedulerHandler
-                                                act.schedulerHandler.postDelayed(() -> {
-                                                    ActivityModelTestProcess a = activityRef.get();
-                                                    if (a != null) {
-                                                        // Run on background thread to avoid blocking main thread
-                                                        a.btWorkerExecutor.execute(a.pendingHttpTask);
-                                                    }
-                                                }, HTTP_DEBOUNCE_DELAY_MS);
-                                            }
-                                        }
-                                    }
-                                } finally {
-                                    try {
-                                        reader.close();
-                                    } catch (IOException e) {
-                                        ActivityModelTestProcess act = activityRef.get();
-                                        if (act != null) {
-                                            act.logError(LogManager.LogCategory.ER, Constants.ErrorMessages.ERROR_CLOSING_READER, e);
-                                        }
-                                    }
-                                }
-                            }
-                        } catch (Exception e) {
-                            ActivityModelTestProcess act = activityRef.get();
-                            if (act != null) {
-                                act.logError(LogManager.LogCategory.ER, Constants.ErrorMessages.HTTP_CONNECTION_ERROR, e);
-                            }
-                        } finally {
-                            // 리소스 정리 보장 (finally 블록에서 한 번만 disconnect)
-                            ActivityModelTestProcess act = activityRef.get();
-                            if (act != null) {
-                                act.safeDisconnectConnection(connection);
-                            } else if (connection != null) {
-                                try {
-                                    connection.disconnect();
-                                } catch (Exception ignored) {}
-                            }
-                        }
-                    } catch (Exception e) {
-                        ActivityModelTestProcess act = activityRef.get();
-                        if (act != null) {
-                            act.logError(LogManager.LogCategory.ER, Constants.ErrorMessages.HTTP_REQUEST_ERROR, e);
-                        }
-                        e.printStackTrace();
-                    }
-                }).start();
-            } catch (Exception e) {
-                ActivityModelTestProcess act = activityRef.get();
-                if (act != null) {
-                    act.logError(LogManager.LogCategory.ER, Constants.ErrorMessages.REQUEST_THREAD_ASYNC_ERROR, e);
-                }
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-//            // doInBackground() 이후에 수행될 작업
-//            // String s 파라미터는 doInBackground() 의 리턴값이다.
-//            TextView tv = findViewById(R.id.getText);
-//            tv.setText(s);
-        }
-    }
-
-    // ⚠️ MEMORY LEAK FIX: Changed to static inner class to prevent implicit Activity reference
-    static class RequestTestTaskThreadAsync extends AsyncTask<String, Void, String> {
-        private final WeakReference<ActivityModelTestProcess> activityRef;
-        private final String url;
-
-        public RequestTestTaskThreadAsync(ActivityModelTestProcess activity) {
-            this.activityRef = new WeakReference<>(activity);
-            this.url = activity.urlTestTaskStr;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                new Thread(() -> {
-                    // 동시성 문제 해결: connection을 로컬 변수로 변경 (각 스레드가 자신만의 connection 사용)
-                    HttpURLConnection connection = null;
-                    try {
-                        URL obj = new URL(url);
-                        connection = (HttpURLConnection) obj.openConnection();
-                        // Log.i(TAG, "▶ [PS] RequestTestTaskThreadAsync.urlTestTaskStr " + urlTestTaskStr);
-
-                        connection.setReadTimeout(Constants.Timeouts.HTTP_READ_TIMEOUT_LONG_MS);
-                        connection.setConnectTimeout(Constants.Timeouts.HTTP_CONNECT_TIMEOUT_LONG_MS);
-                        connection.setRequestMethod(Constants.HTTP.METHOD_GET);  // POST 방식으로 요청
-                        connection.setDoInput(true);  // InputStream 으로 서버로부터 응답을 받겠다는 옵션
-                        connection.setDoOutput(true); // OutputStream 으로 POST 데이터를 넘겨 주겠다는 옵션
-                        connection.setRequestProperty(Constants.HTTP.HEADER_CONTENT_TYPE, Constants.HTTP.CONTENT_TYPE_JSON);    // application/json 형식으로 전송. (Request body 전달시 application/json 으로 서버에 전달)
-                        connection.setRequestProperty(Constants.HTTP.HEADER_CACHE_CONTROL, Constants.HTTP.CACHE_CONTROL_NO_CACHE);
-
-                        try {
-                            int retCode = connection.getResponseCode();
-                            // Log.i(TAG, "▶ [PS] test task response " + retCode);
-                            if (retCode == HttpURLConnection.HTTP_OK) {
-                                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                                try {
-                                    String line = null;
-                                    String lineTmp = null;
-                                    StringBuilder sb = new StringBuilder();
-
-                                    // 무한 루프 방지를 위해 최대 읽기 횟수 제한
-                                    int readCount = 0;
-
-                                    while (readCount < Constants.Timeouts.MAX_READ_COUNT) {
-                                        lineTmp = reader.readLine();
-                                        if (lineTmp == null) {
-                                            break; // 스트림 끝에 도달
-                                        }
-                                        readCount++;
-
-                                        if (!lineTmp.trim().equals("")) {
-                                            sb.append(lineTmp);
-                                            line = lineTmp;
-                                        }
-                                    }
-
-                                    // 모든 데이터를 읽은 후 한 번만 처리
-                                    final String data = (line != null && !line.trim().equals("")) ? line :
-                                            (sb.length() > 0 ? sb.toString() : null);
-
-                                    if (data != null && !data.trim().equals("")) {
-                                        ActivityModelTestProcess activity = activityRef.get();
-                                        if (activity != null) {
-                                            activity.schedulerHandler.post(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    ActivityModelTestProcess act = activityRef.get();
-                                                    if (act == null) return; // Activity destroyed
-                                                    try {
-                                                        act.logDebug(LogManager.LogCategory.PS, Constants.LogMessages.TEST_TASK_RESPONSE_DATA_RECEIVED);
-                                                        // jsonParsing("test_spec", finalData);
-                                                    } catch (Exception e) {
-                                                        act.logError(LogManager.LogCategory.ER, Constants.ErrorMessages.ERROR_PROCESSING_TEST_TASK_DATA, e);
-                                                    }
-                                                }
-                                            });
-                                        }
-                                    }
-                                } finally {
-                                    try {
-                                        reader.close();
-                                    } catch (IOException e) {
-                                        ActivityModelTestProcess act = activityRef.get();
-                                        if (act != null) {
-                                            act.logError(LogManager.LogCategory.ER, Constants.ErrorMessages.ERROR_CLOSING_READER, e);
-                                        }
-                                    }
-                                }
-                            }
-                        } catch (Exception e) {
-                            ActivityModelTestProcess act = activityRef.get();
-                            if (act != null) {
-                                act.logError(LogManager.LogCategory.ER, Constants.ErrorMessages.REQUEST_TEST_TASK_THREAD_ASYNC_CONNECTION_ERROR, e);
-                            }
-                        } finally {
-                            // 리소스 정리 보장 (finally 블록에서 한 번만 disconnect)
-                            ActivityModelTestProcess act = activityRef.get();
-                            if (act != null) {
-                                act.safeDisconnectConnection(connection);
-                            } else if (connection != null) {
-                                try {
-                                    connection.disconnect();
-                                } catch (Exception ignored) {}
-                            }
-                        }
-                    } catch (Exception e) {
-                        ActivityModelTestProcess act = activityRef.get();
-                        if (act != null) {
-                            act.logError(LogManager.LogCategory.ER, Constants.ErrorMessages.REQUEST_TEST_TASK_THREAD_ASYNC_REQUEST_ERROR, e);
-                        }
-                        e.printStackTrace();
-                    }
-                }).start();
-            } catch (Exception e) {
-                ActivityModelTestProcess act = activityRef.get();
-                if (act != null) {
-                    act.logError(LogManager.LogCategory.ER, Constants.ErrorMessages.REQUEST_TEST_TASK_THREAD_ASYNC_ERROR, e);
-                }
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-        }
-    }
-
-    /**
-     * VersionInfoList.jsp 호출하여 네트워크 상태 체크 및 버전 비교
-     * ⚠️ MEMORY LEAK FIX: Changed to static inner class to prevent implicit Activity reference
-     */
-    static class RequestVersionInfoThreadAsync extends AsyncTask<String, Void, String> {
-        private final WeakReference<ActivityModelTestProcess> activityRef;
-        private final String localVersionId;
-        private final String localModelId;
-        private final String serverIp;
-        private final int unitNo;
-
-        public RequestVersionInfoThreadAsync(ActivityModelTestProcess activity, String localVersionId, String localModelId) {
-            this.activityRef = new WeakReference<>(activity);
-            this.localVersionId = localVersionId;
-            this.localModelId = localModelId;
-            this.serverIp = activity.serverIp;
-            this.unitNo = activity.unit_no;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                new Thread(() -> {
-                    HttpURLConnection connection = null;
-                    try {
-                        String url = Constants.URLs.HTTP_PROTOCOL + serverIp + Constants.URLs.ENDPOINT_VERSION_INFO_LIST;
-                        if (globalModelId != null && !globalModelId.isEmpty()) {
-                            url += Constants.Common.QUESTION + Constants.URLs.PARAM_MODEL_ID + globalModelId;
-                        }
-                        // logInfo(LogManager.LogCategory.PS, "RequestVersionInfoThreadAsync >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> url." + url);
-                        URL obj = new URL(url);
-                        connection = (HttpURLConnection) obj.openConnection();
-
-                        connection.setReadTimeout(Constants.Timeouts.HTTP_READ_TIMEOUT_LONG_MS);
-                        connection.setConnectTimeout(Constants.Timeouts.HTTP_CONNECT_TIMEOUT_LONG_MS);
-                        connection.setRequestMethod(Constants.HTTP.METHOD_POST);
-                        connection.setDoInput(true);
-                        connection.setDoOutput(true);
-                        connection.setRequestProperty(Constants.HTTP.HEADER_CONTENT_TYPE, Constants.HTTP.CONTENT_TYPE_JSON);
-                        connection.setRequestProperty(Constants.HTTP.HEADER_CACHE_CONTROL, Constants.HTTP.CACHE_CONTROL_NO_CACHE);
-
-                        try {
-                            int retCode = connection.getResponseCode();
-                            // logInfo(LogManager.LogCategory.SI, "VersionInfoList response code: " + retCode);
-
-                            if (retCode == HttpURLConnection.HTTP_OK) {
-                                // 네트워크 상태가 정상이면 tvRunWsRamp를 파란색으로 변경
-                                ActivityModelTestProcess activity = activityRef.get();
-                                if (activity != null) {
-                                    activity.scheduleUiUpdate(() -> {
-                                        ActivityModelTestProcess act = activityRef.get();
-                                        if (act != null && act.tvRunWsRamp != null) {
-                                            act.tvRunWsRamp.setText(String.valueOf(unitNo));
-                                            act.tvRunWsRamp.setBackgroundColor(act.getBaseContext().getResources().getColor(R.color.blue_01));
-                                        }
-                                    });
-                                }
-
-                                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                                try {
-                                    String line = null;
-                                    String lineTmp = null;
-                                    StringBuilder sb = new StringBuilder();
-                                    int readCount = 0;
-
-                                    while (readCount < Constants.Timeouts.MAX_READ_COUNT) {
-                                        lineTmp = reader.readLine();
-                                        if (lineTmp == null) {
-                                            break;
-                                        }
-                                        readCount++;
-                                        if (!lineTmp.trim().equals("")) {
-                                            sb.append(lineTmp);
-                                            line = lineTmp;
-                                        }
-                                    }
-
-                                    final String data = (line != null && !line.trim().equals("")) ? line :
-                                            (sb.length() > 0 ? sb.toString() : null);
-
-                                    if (data != null && !data.trim().equals("")) {
-                                        // 버전 정보 파싱 및 비교
-                                        try {
-                                            JSONObject jsonObject = new JSONObject(data);
-                                            String serverVersionId = jsonObject.optString(Constants.JsonKeys.CLM_TEST_VERSION_ID, "");
-                                            String serverModelId = jsonObject.optString(Constants.JsonKeys.CLM_MODEL_ID, "");
-
-                                            ActivityModelTestProcess act = activityRef.get();
-                                            if (act != null) {
-                                                // logInfo(LogManager.LogCategory.SI, "Version info received: " + data);
-                                                act.logInfo(LogManager.LogCategory.SI, String.format("Version comparison - Local: [%s, %s], Server: [%s, %s]",
-                                                        localVersionId, localModelId, serverVersionId, serverModelId));
-
-                                                // 버전이 틀리면 TestInfoList.jsp 호출하여 DB 갱신
-                                                boolean versionMismatch = false;
-                                                if (localVersionId != null && !localVersionId.isEmpty() &&
-                                                        serverVersionId != null && !serverVersionId.isEmpty() &&
-                                                        !localVersionId.equals(serverVersionId)) {
-                                                    versionMismatch = true;
-                                                    act.logWarn(LogManager.LogCategory.SI, "Test version ID mismatch detected. Updating test spec data.");
-                                                } else if (localVersionId != null && !localVersionId.isEmpty() &&
-                                                        serverVersionId != null && !serverVersionId.isEmpty() &&
-                                                        !localVersionId.equals(serverVersionId)) {
-                                                    versionMismatch = true;
-                                                    act.logWarn(LogManager.LogCategory.SI, "Model version mismatch detected. Updating test spec data.");
-                                                }
-
-                                                if (versionMismatch) {
-                                                    // TestInfoList.jsp 호출하여 DB 갱신
-                                                    act.clearHttpHandlerQueue();
-                                                    ActivityModelTestProcess.RequestThreadAsync thread = new ActivityModelTestProcess.RequestThreadAsync(act);
-                                                    thread.execute();
-                                                    // logInfo(LogManager.LogCategory.SI, "Test spec data update requested due to version mismatch.");
-                                                } else {
-                                                    act.logInfo(LogManager.LogCategory.SI, "Version matches. No update needed.");
-                                                }
-                                            }
-                                        } catch (JSONException e) {
-                                            ActivityModelTestProcess act = activityRef.get();
-                                            if (act != null) {
-                                                act.logError(LogManager.LogCategory.ER, "Error parsing version info JSON", e);
-                                            }
-                                        }
-                                    }
-                                } finally {
-                                    try {
-                                        reader.close();
-                                    } catch (IOException e) {
-                                        ActivityModelTestProcess act = activityRef.get();
-                                        if (act != null) {
-                                            act.logError(LogManager.LogCategory.ER, Constants.ErrorMessages.ERROR_CLOSING_READER, e);
-                                        }
-                                    }
-                                }
-                            } else {
-                                // 네트워크 상태가 비정상이면 tvRunWsRamp를 빨간색으로 유지
-                                ActivityModelTestProcess act = activityRef.get();
-                                if (act != null) {
-                                    act.logWarn(LogManager.LogCategory.SI, "VersionInfoList request failed with code: " + retCode);
-                                    act.scheduleUiUpdate(() -> {
-                                        ActivityModelTestProcess a = activityRef.get();
-                                        if (a != null && a.tvRunWsRamp != null) {
-                                            // tvRunWsRamp.setText(Constants.Common.EMPTY_STRING);
-                                            a.tvRunWsRamp.setBackgroundColor(a.getBaseContext().getResources().getColor(R.color.red_01));
-                                        }
-                                    });
-                                }
-                            }
-                        } catch (Exception e) {
-                            ActivityModelTestProcess act = activityRef.get();
-                            if (act != null) {
-                                act.logError(LogManager.LogCategory.ER, "VersionInfoList connection error", e);
-                                // 네트워크 오류 시 tvRunWsRamp를 빨간색으로 유지
-                                act.scheduleUiUpdate(() -> {
-                                    ActivityModelTestProcess a = activityRef.get();
-                                    if (a != null && a.tvRunWsRamp != null) {
-                                        // tvRunWsRamp.setText(Constants.Common.EMPTY_STRING);
-                                        a.tvRunWsRamp.setBackgroundColor(a.getBaseContext().getResources().getColor(R.color.red_01));
-                                    }
-                                });
-                            }
-                        } finally {
-                            ActivityModelTestProcess act = activityRef.get();
-                            if (act != null) {
-                                act.safeDisconnectConnection(connection);
-                            } else if (connection != null) {
-                                try {
-                                    connection.disconnect();
-                                } catch (Exception ignored) {}
-                            }
-                        }
-                    } catch (Exception e) {
-                        ActivityModelTestProcess act = activityRef.get();
-                        if (act != null) {
-                            act.logError(LogManager.LogCategory.ER, "VersionInfoList request error", e);
-                            // 네트워크 오류 시 tvRunWsRamp를 빨간색으로 유지
-                            act.scheduleUiUpdate(() -> {
-                                ActivityModelTestProcess a = activityRef.get();
-                                if (a != null && a.tvRunWsRamp != null) {
-                                    // tvRunWsRamp.setText(Constants.Common.EMPTY_STRING);
-                                    a.tvRunWsRamp.setBackgroundColor(a.getBaseContext().getResources().getColor(R.color.red_01));
-                                }
-                            });
-                        }
-                    }
-                }).start();
-            } catch (Exception e) {
-                ActivityModelTestProcess act = activityRef.get();
-                if (act != null) {
-                    act.logError(LogManager.LogCategory.ER, "RequestVersionInfoThreadAsync error", e);
-                }
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-        }
-    }
-
-    private void jsonParsing(String data_type, String json) {
+    void jsonParsing(String data_type, String json) {
         if (!Constants.JsonKeys.TEST_SPEC.equals(data_type) || json == null) {
             return;
         }
@@ -6319,7 +5874,7 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
      * HTTP Handler 메시지 큐 정리 - 메인 스레드 과부하 방지
      * ⚠️ 통합: httpHandler → schedulerHandler로 통합됨
      */
-    private void clearHttpHandlerQueue() {
+    void clearHttpHandlerQueue() {
         synchronized (HTTP_HANDLER_LOCK) {
             if (schedulerHandler != null) {
                 schedulerHandler.removeCallbacksAndMessages(null);
@@ -6328,12 +5883,61 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
         }
     }
 
+    String getUrlStr() {
+        return urlStr;
+    }
+
+    String getUrlTestTaskStr() {
+        return urlTestTaskStr;
+    }
+
+    String getServerIp() {
+        return serverIp;
+    }
+
+    int getUnitNo() {
+        return unit_no;
+    }
+
+    Handler getSchedulerHandler() {
+        return schedulerHandler;
+    }
+
+    ExecutorService getBtWorkerExecutor() {
+        return btWorkerExecutor;
+    }
+
+    Runnable getPendingHttpTask() {
+        return pendingHttpTask;
+    }
+
+    void setPendingHttpTask(Runnable task) {
+        pendingHttpTask = task;
+    }
+
+    void updateRunWsRampConnected(int unitNo) {
+        scheduleUiUpdate(() -> {
+            if (tvRunWsRamp != null) {
+                tvRunWsRamp.setText(String.valueOf(unitNo));
+                tvRunWsRamp.setBackgroundColor(getBaseContext().getResources().getColor(R.color.blue_01));
+            }
+        });
+    }
+
+    void updateRunWsRampDisconnected() {
+        scheduleUiUpdate(() -> {
+            if (tvRunWsRamp != null) {
+                tvRunWsRamp.setBackgroundColor(getBaseContext().getResources().getColor(R.color.red_01));
+            }
+        });
+    }
+
     /**
      * HttpURLConnection 리소스 안전하게 정리
      *
      * @param connection 정리할 HttpURLConnection (null 가능)
      */
-    private static void safeDisconnectConnection(HttpURLConnection connection) {
+    static void safeDisconnectConnection(HttpURLConnection connection) {
         if (connection != null) {
             try {
                 connection.disconnect();
@@ -6864,7 +6468,7 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
         if (mode_type.equals(Constants.ResultStatus.MODE_TYPE_TEST)) {
             // VersionInfoList 호출하여 네트워크 상태 체크 및 버전 비교
             if (localVersionId != null || localModelId != null) {
-                new ActivityModelTestProcess.RequestVersionInfoThreadAsync(this, localVersionId, localModelId).execute();
+                new RequestVersionInfoThreadAsync(this, localVersionId, localModelId).execute();
             }
         }
     }
@@ -7080,109 +6684,17 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
     }
 
     private void startUsbPolling(boolean immediate) {
-        if (usbPollingExecutor.isShutdown()) {
-            logWarn(LogManager.LogCategory.US, "USB polling executor is shut down; cannot schedule polling");
+        if (usbPollingController == null) {
+            logWarn(LogManager.LogCategory.US, "UsbPollingController not initialized; skipping polling start");
             return;
         }
-        if (usbService == null) {
-            logWarn(LogManager.LogCategory.US, "UsbService is null; skipping polling start");
-            return;
-        }
-        if (!usbConnPermissionGranted) {
-            logWarn(LogManager.LogCategory.US, "USB permission not granted; skipping polling start");
-            scheduleUsbPermissionRecovery();
-            return;
-        }
-
-        // 명령 큐 초기화 및 시작
-        if (usbCommandQueue == null) {
-            usbCommandQueue = new UsbCommandQueue();
-            usbCommandQueue.setUsbService(usbService);
-            usbCommandQueue.start();
-            logInfo(LogManager.LogCategory.US, "USB command queue initialized and started");
-        }
-
-        boolean pollingActive = usbPollingEnabled && usbPollingFuture != null && !usbPollingFuture.isCancelled();
-        if (pollingActive) {
-            logDebug(LogManager.LogCategory.US, "USB polling already running; skipping restart");
-            return;
-        }
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>> stopUsbPolling 2");
-        stopUsbPolling();
-        usbPollingEnabled = true;
-        usbPollingRequested = true;
-        usbPollingFailureCount = 0;
-        long initialDelay = immediate ? 0 : usbPollingIntervalMs;
-        try {
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>> stopUsbPolling 2-1 usbPollingEnabled:" + usbPollingEnabled + " usbService:" + usbService);
-            usbPollingFuture = usbPollingExecutor.scheduleAtFixedRate(() -> {
-                if (!usbPollingEnabled) {
-                    System.out.println(">>>>>>>>>>>>>>>>>>>>>>>> stopUsbPolling 3");
-                    stopUsbPolling();
-                    return;
-                }
-                if (usbService == null || usbCommandQueue == null) {
-                    logWarn(LogManager.LogCategory.US, "UsbService or command queue is null; stopping polling");
-                    System.out.println(">>>>>>>>>>>>>>>>>>>>>>>> stopUsbPolling 4");
-                    stopUsbPolling();
-                    return;
-                }
-                try {
-                    // 명령 큐를 통해 폴링 명령 전송
-                    UsbCommandQueue.UsbCommand pollingCommand = new UsbCommandQueue.UsbCommand(
-                            UsbCommandQueue.CommandType.POLLING,
-                            Constants.PLCCommands.RSS0107_DW1006,
-                            "Power consumption polling"
-                    );
-
-                    boolean enqueued = usbCommandQueue.enqueue(pollingCommand);
-                    if (enqueued) {
-                        usbPollingFailureCount = 0;
-                    } else {
-                        usbPollingFailureCount++;
-                        logWarn(LogManager.LogCategory.US, "Failed to enqueue polling command (queue may be full)");
-                    }
-
-                    if (usbPollingFailureCount >= USB_POLLING_FAILURE_THRESHOLD) {
-                        logWarn(LogManager.LogCategory.US, "USB polling failure threshold reached; backing off");
-                        stopUsbPolling();
-                        usbPollingIntervalMs = USB_POLLING_BACKOFF_MS;
-                        startUsbPolling(false);
-                    }
-                } catch (Exception e) {
-                    usbPollingFailureCount++;
-                    logError(LogManager.LogCategory.ER, Constants.ErrorMessages.USB_SERVICE_ERROR, e);
-                    if (usbPollingFailureCount >= USB_POLLING_FAILURE_THRESHOLD) {
-                        logWarn(LogManager.LogCategory.US, "USB polling failure threshold reached; backing off");
-                        stopUsbPolling();
-                        usbPollingIntervalMs = USB_POLLING_BACKOFF_MS;
-                        startUsbPolling(false);
-                    }
-                }
-            }, initialDelay, usbPollingIntervalMs, TimeUnit.MILLISECONDS);
-            logInfo(LogManager.LogCategory.US, "USB polling scheduled (interval: " + usbPollingIntervalMs + " ms)");
-        } catch (Exception e) {
-            logError(LogManager.LogCategory.ER, "Failed to schedule USB polling", e);
-            usbPollingEnabled = false;
-            usbPollingRequested = false;
-        }
+        usbPollingController.startPolling(immediate);
     }
 
     private void stopUsbPolling() {
-        usbPollingEnabled = false;
-        usbPollingRequested = false;
-        usbPollingIntervalMs = Constants.Timeouts.USB_TIMER_INTERVAL_MS;
-        if (usbPollingFuture != null) {
-            usbPollingFuture.cancel(true);
-            usbPollingFuture = null;
-            logInfo(LogManager.LogCategory.US, "USB polling stopped");
+        if (usbPollingController != null) {
+            usbPollingController.stopPolling();
         }
-
-        // 명령 큐도 중지 (선택사항 - 필요시 주석 해제)
-        // if (usbCommandQueue != null) {
-        //     usbCommandQueue.stop();
-        //     usbCommandQueue = null;
-        // }
     }
 
     /**
@@ -7351,80 +6863,42 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
     }
 
     private void scheduleUsbReconnect(boolean immediate) {
-        if (isUsbReconnecting) {
+        if (usbPollingController == null) {
             return;
         }
-        isUsbReconnecting = true;
-        if (usbReconnectRunnable == null) {
-            usbReconnectRunnable = this::attemptUsbReconnect;
-        }
-        usbReconnectHandler.removeCallbacks(usbReconnectRunnable);
-        usbReconnectHandler.postDelayed(usbReconnectRunnable, immediate ? 0 : USB_PERMISSION_RECOVERY_DELAY_MS);
-        updateUsbLampReconnecting();
+        usbPollingController.scheduleReconnect(immediate);
     }
 
     private void cancelUsbReconnect() {
-        usbReconnectHandler.removeCallbacks(usbReconnectRunnable);
-        isUsbReconnecting = false;
-    }
-
-    private void attemptUsbReconnect() {
-        if (!isUsbReconnecting) {
+        if (usbPollingController == null) {
             return;
         }
-        boolean success = tryReconnectUsb();
-        if (success) {
-            cancelUsbReconnect();
-            usbReconnectAttempts = 0;
-            updateUsbLampReady();
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>> startUsbPolling 4");
-            startUsbPolling(true);
-            return;
-        }
-        usbReconnectAttempts++;
-        if (usbReconnectAttempts >= USB_RETRY_MAX_ATTEMPTS) {
-            usbReconnectAttempts = 0;
-            logWarn(LogManager.LogCategory.US, "USB reconnect failed after " + usbReconnectAttempts + " attempts");
-            cancelUsbReconnect();
-            scheduleUsbPermissionRecovery();
-            scheduleUiUpdate(() -> {
-                updateUsbLampDisconnected();
-                clAlert.setVisibility(VISIBLE);
-                tvAlertMessage.setText("USB 또는 블루투스 연결을 확인해주세요.");    // USB 또는 블루투스 연결을 확인해주세요.
-                resetBluetoothSessionKeepUsb();
-            });
-        } else {
-            usbReconnectHandler.postDelayed(usbReconnectRunnable,
-                    USB_PERMISSION_RECOVERY_DELAY_MS * Math.min(usbReconnectAttempts, 5));
-        }
+        usbPollingController.cancelReconnect();
     }
 
     private boolean tryReconnectUsb() {
-        try {
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>> stopUsbPolling 6");
-            stopUsbPolling();
-            setFilters();
-            startService(UsbService.class, usbConnection, null);
-            return usbConnPermissionGranted && usbService != null;
-        } catch (Exception e) {
-            logError(LogManager.LogCategory.US, "USB reconnect attempt failed", e);
+        if (usbPollingController == null) {
             return false;
         }
+        return usbPollingController.tryReconnect();
     }
 
     private boolean isUsbReady() {
-        System.out.println("> 2.usbConnPermissionGranted " + usbConnPermissionGranted + " / usbService " + usbService + " / usbPollingEnabled " + usbPollingEnabled);
+        boolean pollingEnabled = usbPollingController != null && usbPollingController.isPollingEnabled();
+        System.out.println("> 2.usbConnPermissionGranted " + usbConnPermissionGranted + " / usbService " + usbService + " / usbPollingEnabled " + pollingEnabled);
         if (usbConnPermissionGranted) {
             // stopBtMessageTimer();
             tmrReset = new Timer();
             tmrBTMessageSend = new Timer("BtMsgTimer");
             resetCnt = 0;
-            usbReconnectAttempts = 0;
+            if (usbPollingController != null) {
+                usbPollingController.resetReconnectAttempts();
+            }
             disconnectCheckCount = 0;
             receivedMessageCnt = 0;
             sendingMessageCnt = 0;
         }
-        return usbConnPermissionGranted && usbService != null && usbPollingEnabled;
+        return usbConnPermissionGranted && usbService != null && pollingEnabled;
     }
 
     private boolean isBluetoothReady() {
@@ -8171,25 +7645,6 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
         lastTestIdx = listItemAdapter.getCount();
     }
 
-    private static class SpecProcessingResult {
-        String[][] arrTestItems;
-        int totalTimeCnt;
-        String valueWatt;
-        String lowerValueWatt;
-        String upperValueWatt;
-        String productSerialNo;
-        String compValueWatt;
-        String compLowerValueWatt;
-        String compUpperValueWatt;
-        String pumpValueWatt;
-        String pumpLowerValueWatt;
-        String pumpUpperValueWatt;
-        String heaterValueWatt;
-        String heaterLowerValueWatt;
-        String heaterUpperValueWatt;
-        List<Map<String, String>> listItems = new ArrayList<>();
-    }
-
     /*
     private boolean applyTestSpecData(List<Map<String, String>> sourceData, boolean persistToDb) {
         if (sourceData == null || sourceData.isEmpty()) {
@@ -8832,7 +8287,7 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
                         activity.onNewIntent(reconnectIntent);  // ✅ 생명주기 변경 없음
                         activity.setIntent(reconnectIntent);
                     }
-                    if (usbService != null && (usbPollingFuture == null || usbPollingFuture.isCancelled())) {
+                    if (usbService != null && (usbPollingController == null || !usbPollingController.isPollingActive())) {
                         logInfo(LogManager.LogCategory.US, "USB permission granted - starting polling");
                         startUsbPolling(true);
                     }
@@ -8972,7 +8427,7 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
 
                         // 앱 재시작 시 USB 자동 연결: USB 서비스 연결 후 자동으로 연결 메시지 전송 시도
                         // Timer가 아직 시작되지 않은 경우에만 시작 (중복 방지)
-                        if (usbPollingFuture == null || usbPollingFuture.isCancelled()) {
+                        if (usbPollingController == null || !usbPollingController.isPollingActive()) {
                             logInfo(LogManager.LogCategory.US, Constants.LogMessages.USB_SERVICE_CONNECTED);
 
                             // USB 권한이 이미 부여된 경우 즉시 시작, 그렇지 않은 경우 권한 부여 대기
@@ -9120,7 +8575,7 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
         try {
             // ⚠️ 중요: USB 재연결 시에도 타이머가 자동으로 재시작되도록 함
             // usbService가 null이 아니고 타이머가 없으면 시작 (재연결 시에도 동작)
-            if (usbService != null && (usbPollingFuture == null || usbPollingFuture.isCancelled())) {
+            if (usbService != null && (usbPollingController == null || !usbPollingController.isPollingActive())) {
                 // Phase 2: 단순 UI 업데이트를 scheduleUiUpdate로 변경
                 scheduleUiUpdate(() -> {
                     tvConnectPlcRamp.setBackgroundColor(getBaseContext().getResources().getColor(R.color.blue_01));
@@ -9155,12 +8610,15 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
             ttReset = new TimerTask() {
                 @Override
                 public void run() {
-                    logInfo(LogManager.LogCategory.PS, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> resetCnt " + resetCnt + " usbReconnectAttempts " + usbReconnectAttempts);
+                    int reconnectAttempts = usbPollingController != null ? usbPollingController.getReconnectAttempts() : 0;
+                    logInfo(LogManager.LogCategory.PS, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> resetCnt " + resetCnt + " usbReconnectAttempts " + reconnectAttempts);
                     if (resetCnt == 30) {
                         disconnectCheckCount = 0;
                         receivedMessageCnt = 0;
                         sendingMessageCnt = 0;
-                        usbReconnectAttempts = 0;
+                        if (usbPollingController != null) {
+                            usbPollingController.resetReconnectAttempts();
+                        }
                         resetCnt = 0;
                         receiveCommandEmptyCnt = 0;
                         resetBluetoothSessionKeepUsb();
@@ -9181,7 +8639,9 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
                     disconnectCheckCount = 0;
                     receivedMessageCnt = 0;
                     sendingMessageCnt = 0;
-                    usbReconnectAttempts = 0;
+                    if (usbPollingController != null) {
+                        usbPollingController.resetReconnectAttempts();
+                    }
                     resetCnt = 0;
                     receiveCommandEmptyCnt = 0;
                     tmrReset.cancel();
@@ -9604,8 +9064,8 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
             if (usbRecoveryHandler != null) {
                 usbRecoveryHandler.removeCallbacksAndMessages(null);
             }
-            if (usbReconnectHandler != null) {
-                usbReconnectHandler.removeCallbacksAndMessages(null);
+            if (usbPollingController != null) {
+                usbPollingController.clearReconnectCallbacks();
             }
             if (schedulerHandler != null) {
                 schedulerHandler.removeCallbacksAndMessages(null);
@@ -9669,23 +9129,17 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
             // USB 상태
             usbConnTryCnt = 0;
             usbConnPermissionGranted = false;
-            usbPollingRequested = false;
-            usbPollingEnabled = false;
-            usbPollingFailureCount = 0;
-            isUsbReconnecting = false;
-            usbReconnectAttempts = 0;
-            usbPollingFuture = null;
+            if (usbPollingController != null) {
+                usbPollingController.resetPollingState();
+                usbPollingController.resetReconnectAttempts();
+                usbPollingController.clearReconnectCallbacks();
+            }
 
             // ⚠️ IMPORTANT: Remove Runnables from handlers before nullifying
             if (usbRecoveryHandler != null && usbPermissionRecoveryRunnable != null) {
                 usbRecoveryHandler.removeCallbacks(usbPermissionRecoveryRunnable);
             }
             usbPermissionRecoveryRunnable = null;
-
-            if (usbReconnectHandler != null && usbReconnectRunnable != null) {
-                usbReconnectHandler.removeCallbacks(usbReconnectRunnable);
-            }
-            usbReconnectRunnable = null;
 
             usbService = null;
             usbConnection = null;
@@ -10187,425 +9641,47 @@ public class ActivityModelTestProcess extends BaseKioskActivity {
     }
 
     private void applyUiBundle(UiUpdateBundle bundle) {
-        if (bundle == null) {
+        if (uiBundleApplier == null) {
             return;
         }
 
-        if (bundle.dialogVisible) {
-            if (clDialogForPreprocess.getVisibility() != VISIBLE) {
-                clDialogForPreprocess.setVisibility(VISIBLE);
-            }
-            tvDialogMessage.setText(bundle.dialogMessage);
-            trPreprocessContent.setBackgroundColor(bundle.dialogColor);
-        } else if (bundle.dialogHidden) {
-            clDialogForPreprocess.setVisibility(INVISIBLE);
-            tvDialogMessage.setText(Constants.Common.EMPTY_STRING);
+        uiBundleApplier.apply(bundle, this::handleControlModeItemUpdate);
+    }
+
+    private void handleControlModeItemUpdate(UiUpdateBundle bundle) {
+        if (!isControlMode || !isControlOn) {
+            return;
         }
 
-        if (!TextUtils.isEmpty(bundle.currentProcessName)) {
-            tvCurrentProcess.setText(bundle.currentProcessName);
-        }
+        synchronized (controlTestTimerLock) {
+            if (controlTestTimerRunning.get() && controlTestItemIdx >= 0
+                    && bundle.updateItemCommand != null
+                    && bundle.updateItemCommand.equals(controlCurrentTestItem)) {
+                controlTestReceiveCommand = bundle.updateItemCommand;
+                controlTestReceiveResponse = bundle.finalReceiveCommandResponse;
 
-        if (!TextUtils.isEmpty(bundle.temperatureText)) {
-            tvTemperature.setText(bundle.temperatureText);
-        }
-
-        if (!TextUtils.isEmpty(bundle.compWattText)) {
-            tvCompWattValue.setText(bundle.compWattText);
-            tvPopupProcessResultCompValue.setText(bundle.compWattText);
-        }
-
-        if (!TextUtils.isEmpty(bundle.heaterWattText)) {
-            tvHeaterWattValue.setText(bundle.heaterWattText);
-            tvPopupProcessResultHeaterValue.setText(bundle.heaterWattText);
-        }
-
-        if (!TextUtils.isEmpty(bundle.pumpWattText)) {
-            tvPumpWattValue.setText(bundle.pumpWattText);
-        }
-
-        if (!TextUtils.isEmpty(bundle.logText)) {
-            tv_log.setText(bundle.logText);
-        }
-
-        if (bundle.updateListAdapter && bundle.listItemAdapter != null && !TextUtils.isEmpty(bundle.updateItemCommand)) {
-            boolean itemUpdated = false;
-            for (int i = 0; i < bundle.listItemAdapter.getCount(); i++) {
-                VoTestItem item = (VoTestItem) bundle.listItemAdapter.getItem(i);
-                if (!bundle.updateItemCommand.equals(item.getTest_item_command())) {
-                    continue;
-                }
-
-                itemUpdated = true;
-
-                if (bundle.receiveCommandResponseOK != null && bundle.receiveCommandResponseOK.equals(bundle.updateItemCommand) && bundle.updateItemResult.equals(Constants.ResultStatus.NG)) {
-                    // placeholder for NG specific logging
-                }
-                if (Constants.TestItemCodes.CM0100.equals(item.getTest_item_command())) {
-                    item.setTest_item_name(item.getTest_item_name() + Constants.Common.LOGGER_DEVIDER_01 + bundle.updateItemNameSuffix);
-                }
-                if (bundle.updateItemCommand.contains(Constants.TestItemCodes.CM0101)) {
-                    item.setTest_item_info(bundle.temperatureValueCompDiff);
-                }
-                if (bundle.updateItemCommand.contains(Constants.TestItemCodes.HT0101) ||
-                        bundle.updateItemCommand.contains(Constants.TestItemCodes.PM0101) ||
-                        bundle.updateItemCommand.contains(Constants.TestItemCodes.SV0101) ||
-                        bundle.updateItemCommand.contains(Constants.TestItemCodes.SV0201) ||
-                        bundle.updateItemCommand.contains(Constants.TestItemCodes.SV0301) ||
-                        bundle.updateItemCommand.contains(Constants.TestItemCodes.SV0401)) {
-                    item.setTest_item_info(bundle.resultInfo);
-                }
-                if (bundle.updateItemCommand.contains(Constants.TestItemCodes.TH0101)) {
-                    item.setTest_item_info(bundle.decTemperatureHotValue);
-                }
-                if (bundle.updateItemCommand.contains(Constants.TestItemCodes.TH0201)) {
-                    item.setTest_item_info(bundle.decTemperatureColdValue);
-                }
-                item.setTest_result_check_value(bundle.updateItemCheckValue);
-                item.setTest_item_result(bundle.updateItemResult);
-                item.setTest_finish_yn(Constants.ResultStatus.YES);
-                if (bundle.finalReadMessage != null) {
-                    item.setTest_bt_raw_message(bundle.finalReadMessage.substring(bundle.finalReadMessage.indexOf(Constants.CharCodes.STX) + 1, bundle.finalReadMessage.indexOf(Constants.CharCodes.ETX)));
-                }
-                if (bundle.finalReceiveCommandResponse != null) {
-                    item.setTest_bt_raw_response(bundle.finalReceiveCommandResponse);
-                }
-                if (!TextUtils.isEmpty(bundle.finalCalculatedResultValue)) {
-                    item.setTest_bt_processed_value(bundle.finalCalculatedResultValue);
-                }
-            }
-
-            if (bundle.shouldUpdateCounts && itemUpdated) {
-                recalcTestCountsFromAdapter(bundle.listItemAdapter);
-            }
-
-            bundle.listItemAdapter.updateListAdapter();
-
-            // 제어 모드 검사 실행 중이고 검사 항목이 업데이트되었으면 검사 결과 정보 저장
-            if (isControlMode && isControlOn && itemUpdated) {
-                synchronized (controlTestTimerLock) {
-                    if (controlTestTimerRunning.get() && controlTestItemIdx >= 0 &&
-                            bundle.updateItemCommand != null && bundle.updateItemCommand.equals(controlCurrentTestItem)) {
-                        // 제어 모드 검사 수신 정보 업데이트
-                        controlTestReceiveCommand = bundle.updateItemCommand;
-                        controlTestReceiveResponse = bundle.finalReceiveCommandResponse;
-
-                        // 검사 결과 값 저장 (소비전력 또는 온도)
-                        String checkValue = bundle.updateItemCheckValue;
-                        if (checkValue != null && !checkValue.isEmpty()) {
-                            controlTestResultValue = checkValue;
-                        } else if (bundle.resultInfo != null && !bundle.resultInfo.isEmpty()) {
-                            controlTestResultValue = bundle.resultInfo;
-                        } else {
-                            // 소비전력 또는 온도 정보 확인
-                            if (bundle.compWattText != null && !bundle.compWattText.isEmpty()) {
-                                controlTestResultValue = bundle.compWattText;
-                            } else if (bundle.heaterWattText != null && !bundle.heaterWattText.isEmpty()) {
-                                controlTestResultValue = bundle.heaterWattText;
-                            } else if (bundle.pumpWattText != null && !bundle.pumpWattText.isEmpty()) {
-                                controlTestResultValue = bundle.pumpWattText;
-                            } else if (bundle.temperatureText != null && !bundle.temperatureText.isEmpty()) {
-                                controlTestResultValue = bundle.temperatureText;
-                            } else if (bundle.finalCalculatedResultValue != null && !bundle.finalCalculatedResultValue.isEmpty()) {
-                                controlTestResultValue = bundle.finalCalculatedResultValue;
-                            }
-                        }
-
-                        controlTestResult = bundle.updateItemResult;
+                String checkValue = bundle.updateItemCheckValue;
+                if (checkValue != null && !checkValue.isEmpty()) {
+                    controlTestResultValue = checkValue;
+                } else if (bundle.resultInfo != null && !bundle.resultInfo.isEmpty()) {
+                    controlTestResultValue = bundle.resultInfo;
+                } else {
+                    if (bundle.compWattText != null && !bundle.compWattText.isEmpty()) {
+                        controlTestResultValue = bundle.compWattText;
+                    } else if (bundle.heaterWattText != null && !bundle.heaterWattText.isEmpty()) {
+                        controlTestResultValue = bundle.heaterWattText;
+                    } else if (bundle.pumpWattText != null && !bundle.pumpWattText.isEmpty()) {
+                        controlTestResultValue = bundle.pumpWattText;
+                    } else if (bundle.temperatureText != null && !bundle.temperatureText.isEmpty()) {
+                        controlTestResultValue = bundle.temperatureText;
+                    } else if (bundle.finalCalculatedResultValue != null && !bundle.finalCalculatedResultValue.isEmpty()) {
+                        controlTestResultValue = bundle.finalCalculatedResultValue;
                     }
                 }
-            }
-        }
 
-        if (bundle.finalCurrentTestItem != null && bundle.finalCurrentTestItem.contains(Constants.TestItemCodes.SN0101)) {
-            // reserved for additional logic
-        }
-    }
-
-    private void recalcTestCountsFromAdapter(ItemAdapterTestItem adapter) {
-        if (adapter == null) {
-            return;
-        }
-
-        int calculatedOk = 0;
-        int calculatedNg = 0;
-        for (int i = 0; i < adapter.getCount(); i++) {
-            VoTestItem item = (VoTestItem) adapter.getItem(i);
-            String result = item.getTest_item_result();
-            switch (result) {
-                case Constants.ResultStatus.OK:
-                    calculatedOk++;
-                    break;
-                case Constants.ResultStatus.NG:
-                    calculatedNg++;
-                    break;
-            }
-        }
-
-        testOkCnt = calculatedOk;
-        testNgCnt = calculatedNg;
-        tvTestOkCnt.setText(String.valueOf(calculatedOk));
-        tvTestNgCnt.setText(String.valueOf(calculatedNg));
-    }
-
-    private static class UiUpdateBundle {
-        final boolean dialogVisible;
-        final boolean dialogHidden;
-        final int dialogColor;
-        final String dialogMessage;
-        final String temperatureText;
-        final String compWattText;
-        final String heaterWattText;
-        final String pumpWattText;
-        final String logText;
-        final String updateItemCommand;
-        final String updateItemResult;
-        final String updateItemCheckValue;
-        final String updateItemInfo;
-        final String updateItemNameSuffix;
-        final boolean updateListAdapter;
-        final String finalReceiveCommandResponse;
-        final String finalCalculatedResultValue;
-        final String finalReadMessage;
-        final String temperatureValueCompDiff;
-        final String resultInfo;
-        final String decTemperatureHotValue;
-        final String decTemperatureColdValue;
-        final String finalCurrentTestItem;
-        final int testItemIdx;
-        final int testOkCnt;
-        final int testNgCnt;
-        final String receiveCommandResponseOK;
-        final boolean shouldUpdateCounts;
-        final ItemAdapterTestItem listItemAdapter;
-        final String currentProcessName;
-        final int receivedMessageCnt;
-
-        private UiUpdateBundle(Builder builder) {
-            this.dialogVisible = builder.dialogVisible;
-            this.dialogHidden = builder.dialogHidden;
-            this.dialogColor = builder.dialogColor;
-            this.dialogMessage = builder.dialogMessage;
-            this.temperatureText = builder.temperatureText;
-            this.compWattText = builder.compWattText;
-            this.heaterWattText = builder.heaterWattText;
-            this.pumpWattText = builder.pumpWattText;
-            this.logText = builder.logText;
-            this.updateItemCommand = builder.updateItemCommand;
-            this.updateItemResult = builder.updateItemResult;
-            this.updateItemCheckValue = builder.updateItemCheckValue;
-            this.updateItemInfo = builder.updateItemInfo;
-            this.updateItemNameSuffix = builder.updateItemNameSuffix;
-            this.updateListAdapter = builder.updateListAdapter;
-            this.finalReceiveCommandResponse = builder.finalReceiveCommandResponse;
-            this.finalCalculatedResultValue = builder.finalCalculatedResultValue;
-            this.finalReadMessage = builder.finalReadMessage;
-            this.temperatureValueCompDiff = builder.temperatureValueCompDiff;
-            this.resultInfo = builder.resultInfo;
-            this.decTemperatureHotValue = builder.decTemperatureHotValue;
-            this.decTemperatureColdValue = builder.decTemperatureColdValue;
-            this.finalCurrentTestItem = builder.finalCurrentTestItem;
-            this.testItemIdx = builder.testItemIdx;
-            this.testOkCnt = builder.testOkCnt;
-            this.testNgCnt = builder.testNgCnt;
-            this.receiveCommandResponseOK = builder.receiveCommandResponseOK;
-            this.shouldUpdateCounts = builder.shouldUpdateCounts;
-            this.listItemAdapter = builder.listItemAdapter;
-            this.currentProcessName = builder.currentProcessName;
-            this.receivedMessageCnt = builder.receivedMessageCnt;
-        }
-
-        static class Builder {
-            private boolean dialogVisible;
-            private boolean dialogHidden;
-            private int dialogColor;
-            private String dialogMessage;
-            private String temperatureText;
-            private String compWattText;
-            private String heaterWattText;
-            private String pumpWattText;
-            private String logText;
-            private String updateItemCommand = Constants.Common.EMPTY_STRING;
-            private String updateItemResult = Constants.Common.EMPTY_STRING;
-            private String updateItemCheckValue = Constants.Common.EMPTY_STRING;
-            private String updateItemInfo = Constants.Common.EMPTY_STRING;
-            private String updateItemNameSuffix = Constants.Common.EMPTY_STRING;
-            private boolean updateListAdapter;
-            private String finalReceiveCommandResponse;
-            private String finalCalculatedResultValue;
-            private String finalReadMessage;
-            private String temperatureValueCompDiff;
-            private String resultInfo;
-            private String decTemperatureHotValue;
-            private String decTemperatureColdValue;
-            private String finalCurrentTestItem;
-            private int testItemIdx;
-            private int testOkCnt;
-            private int testNgCnt;
-            private String receiveCommandResponseOK;
-            private boolean shouldUpdateCounts;
-            private ItemAdapterTestItem listItemAdapter;
-            private String currentProcessName;
-            private int receivedMessageCnt;
-
-            Builder setDialogVisible(boolean value) {
-                this.dialogVisible = value;
-                return this;
-            }
-
-            Builder setDialogHidden(boolean value) {
-                this.dialogHidden = value;
-                return this;
-            }
-
-            Builder setDialogColor(int value) {
-                this.dialogColor = value;
-                return this;
-            }
-
-            Builder setDialogMessage(String value) {
-                this.dialogMessage = value;
-                return this;
-            }
-
-            Builder setTemperatureText(String value) {
-                this.temperatureText = value;
-                return this;
-            }
-
-            Builder setCompWattText(String value) {
-                this.compWattText = value;
-                return this;
-            }
-
-            Builder setHeaterWattText(String value) {
-                this.heaterWattText = value;
-                return this;
-            }
-
-            Builder setPumpWattText(String value) {
-                this.pumpWattText = value;
-                return this;
-            }
-
-            Builder setLogText(String value) {
-                this.logText = value;
-                return this;
-            }
-
-            Builder setUpdateItemCommand(String value) {
-                this.updateItemCommand = value == null ? Constants.Common.EMPTY_STRING : value;
-                return this;
-            }
-
-            Builder setUpdateItemResult(String value) {
-                this.updateItemResult = value == null ? Constants.Common.EMPTY_STRING : value;
-                return this;
-            }
-
-            Builder setUpdateItemCheckValue(String value) {
-                this.updateItemCheckValue = value == null ? Constants.Common.EMPTY_STRING : value;
-                return this;
-            }
-
-            Builder setUpdateItemInfo(String value) {
-                this.updateItemInfo = value == null ? Constants.Common.EMPTY_STRING : value;
-                return this;
-            }
-
-            Builder setUpdateItemNameSuffix(String value) {
-                this.updateItemNameSuffix = value == null ? Constants.Common.EMPTY_STRING : value;
-                return this;
-            }
-
-            Builder setUpdateListAdapter(boolean value) {
-                this.updateListAdapter = value;
-                return this;
-            }
-
-            Builder setFinalReceiveCommandResponse(String value) {
-                this.finalReceiveCommandResponse = value;
-                return this;
-            }
-
-            Builder setFinalCalculatedResultValue(String value) {
-                this.finalCalculatedResultValue = value;
-                return this;
-            }
-
-            Builder setFinalReadMessage(String value) {
-                this.finalReadMessage = value;
-                return this;
-            }
-
-            Builder setTemperatureValueCompDiff(String value) {
-                this.temperatureValueCompDiff = value;
-                return this;
-            }
-
-            Builder setResultInfo(String value) {
-                this.resultInfo = value;
-                return this;
-            }
-
-            Builder setDecTemperatureHotValue(String value) {
-                this.decTemperatureHotValue = value;
-                return this;
-            }
-
-            Builder setDecTemperatureColdValue(String value) {
-                this.decTemperatureColdValue = value;
-                return this;
-            }
-
-            Builder setFinalCurrentTestItem(String value) {
-                this.finalCurrentTestItem = value;
-                return this;
-            }
-
-            Builder setTestItemIdx(int value) {
-                this.testItemIdx = value;
-                return this;
-            }
-
-            Builder setTestOkCnt(int value) {
-                this.testOkCnt = value;
-                return this;
-            }
-
-            Builder setTestNgCnt(int value) {
-                this.testNgCnt = value;
-                return this;
-            }
-
-            Builder setReceiveCommandResponseOK(String value) {
-                this.receiveCommandResponseOK = value;
-                return this;
-            }
-
-            Builder setShouldUpdateCounts(boolean value) {
-                this.shouldUpdateCounts = value;
-                return this;
-            }
-
-            Builder setListItemAdapter(ItemAdapterTestItem adapter) {
-                this.listItemAdapter = adapter;
-                return this;
-            }
-
-            Builder setCurrentProcessName(String value) {
-                this.currentProcessName = value;
-                return this;
-            }
-
-            Builder setReceivedMessageCnt(int value) {
-                this.receivedMessageCnt = value;
-                return this;
-            }
-
-            UiUpdateBundle build() {
-                return new UiUpdateBundle(this);
+                controlTestResult = bundle.updateItemResult;
             }
         }
     }
+
 }
