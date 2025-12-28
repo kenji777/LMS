@@ -102,6 +102,7 @@ public class ActivitySplash extends BaseKioskActivity {
             
             // 초기 문자열 데이터 마이그레이션 (한 번만 실행)
             TestData.migrateInitialStringResources(this);
+            TestData.migrateActivityModelTestProcessLogStrings(this);
             
             // 초기 에러 카탈로그 데이터 삽입 (한 번만 실행)
             TestData.insertInitialErrorCatalog(this);
@@ -254,6 +255,7 @@ public class ActivitySplash extends BaseKioskActivity {
             
             // 초기 문자열 데이터 마이그레이션 (한 번만 실행)
             TestData.migrateInitialStringResources(this);
+            TestData.migrateActivityModelTestProcessLogStrings(this);
             
             // 초기 에러 카탈로그 데이터 삽입 (한 번만 실행)
             TestData.insertInitialErrorCatalog(this);

@@ -16,14 +16,14 @@ import static itf.com.app.lms.ActivityModelList.globalModelId;
 
 import itf.com.app.lms.ActivityModelTestProcess;
 
-class RequestVersionInfoThreadAsync extends AsyncTask<String, Void, String> {
+public class RequestVersionInfoThreadAsync extends AsyncTask<String, Void, String> {
     private final WeakReference<ActivityModelTestProcess> activityRef;
     private final String localVersionId;
     private final String localModelId;
     private final String serverIp;
     private final int unitNo;
 
-    RequestVersionInfoThreadAsync(ActivityModelTestProcess activity, String localVersionId, String localModelId) {
+    public RequestVersionInfoThreadAsync(ActivityModelTestProcess activity, String localVersionId, String localModelId) {
         this.activityRef = new WeakReference<>(activity);
         this.localVersionId = localVersionId;
         this.localModelId = localModelId;
@@ -46,7 +46,6 @@ class RequestVersionInfoThreadAsync extends AsyncTask<String, Void, String> {
                     if (globalModelId != null && !globalModelId.isEmpty()) {
                         url += Constants.Common.QUESTION + Constants.URLs.PARAM_MODEL_ID + globalModelId;
                     }
-                    // logInfo(LogManager.LogCategory.PS, "RequestVersionInfoThreadAsync >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> url." + url);
                     URL obj = new URL(url);
                     connection = (HttpURLConnection) obj.openConnection();
 
@@ -60,10 +59,8 @@ class RequestVersionInfoThreadAsync extends AsyncTask<String, Void, String> {
 
                     try {
                         int retCode = connection.getResponseCode();
-                        // logInfo(LogManager.LogCategory.SI, "VersionInfoList response code: " + retCode);
 
                         if (retCode == HttpURLConnection.HTTP_OK) {
-                            // 네트워크 상태가 정상일때 tvRunWsRamp를 파란색으로 변경
                             ActivityModelTestProcess activity = activityRef.get();
                             if (activity != null) {
                                 activity.updateRunWsRampConnected(unitNo);
@@ -92,7 +89,6 @@ class RequestVersionInfoThreadAsync extends AsyncTask<String, Void, String> {
                                         (sb.length() > 0 ? sb.toString() : null);
 
                                 if (data != null && !data.trim().equals("")) {
-                                    // 서버 데이터와 로컬 비교
                                     try {
                                         JSONObject jsonObject = new JSONObject(data);
                                         String serverVersionId = jsonObject.optString(Constants.JsonKeys.CLM_TEST_VERSION_ID, "");
@@ -100,11 +96,9 @@ class RequestVersionInfoThreadAsync extends AsyncTask<String, Void, String> {
 
                                         ActivityModelTestProcess act = activityRef.get();
                                         if (act != null) {
-                                            // logInfo(LogManager.LogCategory.SI, "Version info received: " + data);
                                             act.logInfo(LogManager.LogCategory.SI, String.format("Version comparison - Local: [%s, %s], Server: [%s, %s]",
                                                     localVersionId, localModelId, serverVersionId, serverModelId));
 
-                                            // 서버와 다르면 TestInfoList.jsp 에서 DB 업데이트
                                             boolean versionMismatch = false;
                                             if (localVersionId != null && !localVersionId.isEmpty() &&
                                                     serverVersionId != null && !serverVersionId.isEmpty() &&
@@ -119,11 +113,9 @@ class RequestVersionInfoThreadAsync extends AsyncTask<String, Void, String> {
                                             }
 
                                             if (versionMismatch) {
-                                                // TestInfoList.jsp 에서 DB 업데이트
                                                 act.clearHttpHandlerQueue();
                                                 RequestThreadAsync thread = new RequestThreadAsync(act);
                                                 thread.execute();
-                                                // logInfo(LogManager.LogCategory.SI, "Test spec data update requested due to version mismatch.");
                                             } else {
                                                 act.logInfo(LogManager.LogCategory.SI, "Version matches. No update needed.");
                                             }
@@ -146,7 +138,6 @@ class RequestVersionInfoThreadAsync extends AsyncTask<String, Void, String> {
                                 }
                             }
                         } else {
-                            // 네트워크 상태가 비정상이면 tvRunWsRamp를 빨간색으로
                             ActivityModelTestProcess act = activityRef.get();
                             if (act != null) {
                                 act.logWarn(LogManager.LogCategory.SI, "VersionInfoList request failed with code: " + retCode);
@@ -157,13 +148,12 @@ class RequestVersionInfoThreadAsync extends AsyncTask<String, Void, String> {
                         ActivityModelTestProcess act = activityRef.get();
                         if (act != null) {
                             act.logError(LogManager.LogCategory.ER, "VersionInfoList connection error", e);
-                            // 네트워크 에러 시 tvRunWsRamp 빨간색
                             act.updateRunWsRampDisconnected();
                         }
                     } finally {
                         ActivityModelTestProcess act = activityRef.get();
                         if (act != null) {
-                            act.safeDisconnectConnection(connection);
+                            ActivityModelTestProcess.safeDisconnectConnection(connection);
                         } else if (connection != null) {
                             try {
                                 connection.disconnect();
@@ -174,7 +164,6 @@ class RequestVersionInfoThreadAsync extends AsyncTask<String, Void, String> {
                     ActivityModelTestProcess act = activityRef.get();
                     if (act != null) {
                         act.logError(LogManager.LogCategory.ER, "VersionInfoList request error", e);
-                        // 네트워크 에러 시 tvRunWsRamp 빨간색
                         act.updateRunWsRampDisconnected();
                     }
                 }

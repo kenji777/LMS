@@ -4,21 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-class SpecProcessingResult {
-    String[][] arrTestItems;
-    int totalTimeCnt;
-    String valueWatt;
-    String lowerValueWatt;
-    String upperValueWatt;
-    String productSerialNo;
-    String compValueWatt;
-    String compLowerValueWatt;
-    String compUpperValueWatt;
-    String pumpValueWatt;
-    String pumpLowerValueWatt;
-    String pumpUpperValueWatt;
-    String heaterValueWatt;
-    String heaterLowerValueWatt;
-    String heaterUpperValueWatt;
-    List<Map<String, String>> listItems = new ArrayList<>();
+public class SpecProcessingResult {
+    public String[][] arrTestItems;
+    public int totalTimeCnt;
+    public String valueWatt;
+    public String lowerValueWatt;
+    public String upperValueWatt;
+    public String productSerialNo;
+    public String compValueWatt;
+    public String compLowerValueWatt;
+    public String compUpperValueWatt;
+    public String pumpValueWatt;
+    public String pumpLowerValueWatt;
+    public String pumpUpperValueWatt;
+    public String heaterValueWatt;
+    public String heaterLowerValueWatt;
+    public String heaterUpperValueWatt;
+    public List<Map<String, String>> listItems = new ArrayList<>();
 }

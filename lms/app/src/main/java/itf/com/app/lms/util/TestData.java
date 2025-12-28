@@ -2298,4 +2298,561 @@ public class TestData {
             }
         }
     }
+
+
+    public static void migrateActivityModelTestProcessLogStrings(Context context) {
+        DBHelper helper = null;
+        SQLiteDatabase db = null;
+
+        try {
+            helper = new DBHelper(context, "itf_temperature_table.db", null, DATABASE_VERSION);
+            db = helper.getWritableDatabase();
+
+            String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+
+            String[][] logStrings = {
+                {"log.activity_model_test_process.0001", "log", "\"BT message timer already running, skipping start\"", "\"BT message timer already running, skipping start\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0001)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0002", "log", "\"Bluetooth not connected, cannot start message timer\"", "\"Bluetooth not connected, cannot start message timer\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0002)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0003", "log", "\"Bluetooth socket not connected; stopping message timer\"", "\"Bluetooth socket not connected; stopping message timer\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0003)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0004", "log", "\"arrTestItems not initialized yet, skipping message processing\"", "\"arrTestItems not initialized yet, skipping message processing\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0004)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0005", "log", "\"ê²ì¬ í­ëª© ì í¸ ì¡ì .B [T:%d/%d][C:%d/%s][P:%d/%d][S:%s][G:%d=%d-%d] ìì  ìì %s\"", "\"ê²ì¬ í­ëª© ì í¸ ì¡ì .B [T:%d/%d][C:%d/%s][P:%d/%d][S:%s][G:%d=%d-%d] ìì  ìì %s\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0005)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0006", "log", "%s", "%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0006)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0007", "log", "\"CM0101 ì¸ë±ì¤ë¥¼ ì°¾ì ì ìê±°ë ë²ìë¥¼ ë²ì´ë¨: \"%s", "\"CM0101 ì¸ë±ì¤ë¥¼ ì°¾ì ì ìê±°ë ë²ìë¥¼ ë²ì´ë¨: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0007)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0008", "log", "\"Error updating CM0100 in runOnUiThread\"", "\"Error updating CM0100 in runOnUiThread\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0008)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0009", "log", "\"Error starting BT message timer\"", "\"Error starting BT message timer\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0009)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0010", "log", "\"Error canceling BT message timer\"", "\"Error canceling BT message timer\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0010)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0011", "log", "\"Error canceling BT message timer task\"", "\"Error canceling BT message timer task\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0011)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0012", "log", "\">>>>>>>>>>>>>>>>> Setting header background color to red for control mode isControlOn \"%s\" isTestWaiting \"%s", "\">>>>>>>>>>>>>>>>> Setting header background color to red for control mode isControlOn \"%s\" isTestWaiting \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0012)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0013", "log", "\">>>>>>>>>>>>>>>>> Setting header background color to red for control mode AAAAA\"", "\">>>>>>>>>>>>>>>>> Setting header background color to red for control mode AAAAA\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0013)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0014", "log", "\">>>>>>>>>>>>>>>>> Setting header background color to red for control mode CCCCC\"", "\">>>>>>>>>>>>>>>>> Setting header background color to red for control mode CCCCC\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0014)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0015", "log", "\"Error updating header background color\"", "\"Error updating header background color\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0015)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0016", "log", "\">>>>>>>>>>>>>>>>> Setting header background color to red for control mode isControlOn.before \"%s", "\">>>>>>>>>>>>>>>>> Setting header background color to red for control mode isControlOn.before \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0016)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0017", "log", "\">>>>>>>>>>>>>>>>> Setting header background color to red for control mode isControlOn.after \"%s", "\">>>>>>>>>>>>>>>>> Setting header background color to red for control mode isControlOn.after \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0017)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0018", "log", "\"Error cleaning up BT message timer before restart\"", "\"Error cleaning up BT message timer before restart\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0018)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0019", "log", "\"BT message timer restarted after control mode exit\"", "\"BT message timer restarted after control mode exit\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0019)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0020", "log", "\"Error restarting BT message timer after control mode\"", "\"Error restarting BT message timer after control mode\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0020)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0021", "log", "\"Bluetooth not connected, skipping BT message timer restart\"", "\"Bluetooth not connected, skipping BT message timer restart\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0021)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0022", "log", "\"Error restoring timers after control mode\"", "\"Error restoring timers after control mode\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0022)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0023", "log", "\"All timers stopped for control mode (USB polling timer kept running)\"", "\"All timers stopped for control mode (USB polling timer kept running)\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0023)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0024", "log", "\"Error stopping all timers\"", "\"Error stopping all timers\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0024)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0025", "log", "\"Error canceling finished restart timer\"", "\"Error canceling finished restart timer\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0025)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0026", "log", "\"Error canceling finished restart timer task\"", "\"Error canceling finished restart timer task\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0026)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0027", "log", "\"Error canceling unfinished restart timer\"", "\"Error canceling unfinished restart timer\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0027)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0028", "log", "\"Error canceling unfinished restart timer task\"", "\"Error canceling unfinished restart timer task\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0028)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0029", "log", "\"Error canceling remote command timer\"", "\"Error canceling remote command timer\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0029)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0030", "log", "\"Error canceling remote command timer task\"", "\"Error canceling remote command timer task\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0030)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0031", "log", "\"Error canceling reset timer\"", "\"Error canceling reset timer\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0031)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0032", "log", "\"Error canceling reset timer task\"", "\"Error canceling reset timer task\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0032)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0033", "log", "\"Error canceling check duration timer\"", "\"Error canceling check duration timer\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0033)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0034", "log", "\"Error canceling barcode request timer\"", "\"Error canceling barcode request timer\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0034)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0035", "log", "\"Error canceling app reset timer task\"", "\"Error canceling app reset timer task\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0035)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0036", "log", "\">>>>>>>>>>>>>>>>> Setting header background color to red for control mode BBBB\"", "\">>>>>>>>>>>>>>>>> Setting header background color to red for control mode BBBB\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0036)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0037", "log", "\"Error updating header background color to red\"", "\"Error updating header background color to red\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0037)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0038", "log", "\"Error updating control mode button\"", "\"Error updating control mode button\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0038)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0039", "log", "\"Error displaying control request access message\"", "\"Error displaying control request access message\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0039)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0040", "log", "\"Error clearing control request access message\"", "\"Error clearing control request access message\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0040)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0041", "log", "\"Control mode response timeout for command: \"%s", "\"Control mode response timeout for command: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0041)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0042", "log", "\"Started waiting for control response: \"%s", "\"Started waiting for control response: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0042)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0043", "log", "\"Control mode response received: \"%s\" for command: \"%s", "\"Control mode response received: \"%s\" for command: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0043)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0044", "log", "\"Dialog components not initialized\"", "\"Dialog components not initialized\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0044)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0045", "log", "\"Failed to show control response dialog\"", "\"Failed to show control response dialog\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0045)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0046", "log", "\"Not in control mode, cannot execute control test item\"", "\"Not in control mode, cannot execute control test item\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0046)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0047", "log", "\"arrTestItems not initialized, cannot execute control test item\"", "\"arrTestItems not initialized, cannot execute control test item\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0047)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0048", "log", "\"Test item not found for command: \"%s", "\"Test item not found for command: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0048)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0049", "log", "\"Starting control mode test item: \" + command + \" (index: \" + foundIndex + \", duration: \" + arrTestItems[foundIndex][2] + \" seconds)\"", "\"Starting control mode test item: \" + command + \" (index: \" + foundIndex + \", duration: \" + arrTestItems[foundIndex][2] + \" seconds)\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0049)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0050", "log", "\"Bluetooth not connected, stopping control test timer\"", "\"Bluetooth not connected, stopping control test timer\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0050)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0051", "log", "\"Invalid test duration: \"%s", "\"Invalid test duration: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0051)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0052", "log", "\"Control test item signal sent [C:%d/%d][S:%s]\"", "\"Control test item signal sent [C:%d/%d][S:%s]\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0052)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0053", "log", "\"Control test item completed: \"%s", "\"Control test item completed: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0053)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0054", "log", "\"Failed to start control test timer\"", "\"Failed to start control test timer\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0054)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0055", "log", "\"Force exit control mode due to test restart\"", "\"Force exit control mode due to test restart\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0055)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0056", "log", "\"Cannot show control mode test result dialog: no test item\"", "\"Cannot show control mode test result dialog: no test item\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0056)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0057", "log", "\"Control mode test result dialog shown: \"%s", "\"Control mode test result dialog shown: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0057)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0058", "log", "\"Failed to show control mode test result dialog\"", "\"Failed to show control mode test result dialog\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0058)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0059", "log", "\"Cannot show control test result dialog: invalid test item index\"", "\"Cannot show control test result dialog: invalid test item index\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0059)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0060", "log", "\"Test result dialog components not initialized\"", "\"Test result dialog components not initialized\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0060)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0061", "log", "\"Control test result dialog shown: \" + testResult + \" (OK: \" + testOkCnt + \", NG: \" + testNgCnt + \")\"", "\"Control test result dialog shown: \" + testResult + \" (OK: \" + testOkCnt + \", NG: \" + testNgCnt + \")\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0061)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0062", "log", "\"Failed to show control test result dialog\"", "\"Failed to show control test result dialog\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0062)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0063", "log", "\"Control owner notification sent to web server: \"%s", "\"Control owner notification sent to web server: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0063)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0064", "log", "\"Failed to send control owner notification, response code: \"%s", "\"Failed to send control owner notification, response code: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0064)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0065", "log", "\"Failed to notify web server of control owner: \"%s", "\"Failed to notify web server of control owner: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0065)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0066", "log", "\"Shutdown notification sent to web client: \"%s", "\"Shutdown notification sent to web client: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0066)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0067", "log", "\"Failed to send shutdown notification, response code: \"%s", "\"Failed to send shutdown notification, response code: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0067)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0068", "log", "\"Failed to notify web client of shutdown: \"%s", "\"Failed to notify web client of shutdown: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0068)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0069", "log", "\">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> controlRequestAccessRunnable \"", "\">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> controlRequestAccessRunnable \"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0069)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0070", "log", "\"onDestroy\"", "\"onDestroy\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0070)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0071", "log", "\"Error closing Bluetooth socket in onDestroy: \"%s", "\"Error closing Bluetooth socket in onDestroy: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0071)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0072", "log", "\"Error canceling Bluetooth connected thread: \"%s", "\"Error canceling Bluetooth connected thread: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0072)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0073", "log", "\"btWorkerExecutor did not terminate within timeout\"", "\"btWorkerExecutor did not terminate within timeout\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0073)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0074", "log", "\"Interrupted while waiting for btWorkerExecutor termination\"", "\"Interrupted while waiting for btWorkerExecutor termination\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0074)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0075", "log", "\"usbPollingExecutor did not terminate within timeout\"", "\"usbPollingExecutor did not terminate within timeout\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0075)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0076", "log", "\"Interrupted while waiting for usbPollingExecutor termination\"", "\"Interrupted while waiting for usbPollingExecutor termination\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0076)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0077", "log", "\"onDestroy error: \"%s", "\"onDestroy error: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0077)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0078", "log", "\"getLocalIpAddress error\"", "\"getLocalIpAddress error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0078)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0079", "log", "\"â StrictMode enabled: ThreadPolicy (network, disk I/O) + VmPolicy (memory leaks)\"", "\"â StrictMode enabled: ThreadPolicy (network, disk I/O) + VmPolicy (memory leaks)\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0079)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0080", "log", "\"onCreate entranceCheck:\"%s\" / currentTestItem:\"%s", "\"onCreate entranceCheck:\"%s\" / currentTestItem:\"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0080)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0081", "log", "\"onCreate error\"", "\"onCreate error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0081)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0082", "log", "\">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Permission A.requestRuntimePermissionsOnMainThread \"", "\">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Permission A.requestRuntimePermissionsOnMainThread \"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0082)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0083", "log", "\"Permission request already in progress; skipping duplicate request\"", "\"Permission request already in progress; skipping duplicate request\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0083)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0084", "log", "\"Deferred initialization failed\"", "\"Deferred initialization failed\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0084)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0085", "log", "\">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> EEE isControlMode \"%s\" / isControlOn \"%s", "\">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> EEE isControlMode \"%s\" / isControlOn \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0085)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0086", "log", "\">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FFF isControlMode \"%s\" / isControlOn \"%s", "\">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FFF isControlMode \"%s\" / isControlOn \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0086)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0087", "log", "\"ë¸ë£¨í¬ì¤ ëë°ì´ì¤ ì°ê²° ì±ê³µ\"", "\"ë¸ë£¨í¬ì¤ ëë°ì´ì¤ ì°ê²° ì±ê³µ\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0087)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0088", "log", "\"Bluetooth device name parsing error\"", "\"Bluetooth device name parsing error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0088)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0089", "log", "\"ë¸ë£¨í¬ì¤ ëë°ì´ì¤ ì°ê²° ì¤í¨\"", "\"ë¸ë£¨í¬ì¤ ëë°ì´ì¤ ì°ê²° ì¤í¨\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0089)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0090", "log", "\"ìë² ë¯¸ì°ê²° í ë¸ë£¨í¬ì¤ ì°ê²° ìë\"", "\"ìë² ë¯¸ì°ê²° í ë¸ë£¨í¬ì¤ ì°ê²° ìë\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0090)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0091", "log", "\"ìë² ì°ê²° í ë¸ë£¨í¬ì¤ ì°ê²° ìë\"", "\"ìë² ì°ê²° í ë¸ë£¨í¬ì¤ ì°ê²° ìë\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0091)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0092", "log", "\"Initializing communication managers...\"", "\"Initializing communication managers...\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0092)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0093", "log", "\"All managers initialized successfully\"", "\"All managers initialized successfully\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0093)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0094", "log", "\"Error initializing managers\"", "\"Error initializing managers\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0094)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0095", "log", "\"TimerManager initialized\"", "\"TimerManager initialized\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0095)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0096", "log", "\"PermissionManager initialized\"", "\"PermissionManager initialized\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0096)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0097", "log", "\"LoggingService initialized\"", "\"LoggingService initialized\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0097)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0098", "log", "\"All processors initialized\"", "\"All processors initialized\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0098)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0099", "log", "\"Error initializing service managers\"", "\"Error initializing service managers\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0099)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0100", "log", "\"Error updating BT UI\"", "\"Error updating BT UI\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0100)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0101", "log", "\"Bluetooth error: \"%s\" - \"%s", "\"Bluetooth error: \"%s\" - \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0101)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0102", "log", "\"Error showing BT error\"", "\"Error showing BT error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0102)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0103", "log", "\"BluetoothManager initialized\"", "\"BluetoothManager initialized\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0103)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0104", "log", "\"Test spec data received: \" + (specData != null ? specData.size() : 0) + \" items\"", "\"Test spec data received: \" + (specData != null ? specData.size() : 0) + \" items\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0104)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0105", "log", "\"Barcode info received: \"%s\" -> \"%s", "\"Barcode info received: \"%s\" -> \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0105)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0106", "log", "\"Error processing barcode info\"", "\"Error processing barcode info\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0106)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0107", "log", "\"Upload \"%s\": \"%s", "\"Upload \"%s\": \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0107)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0108", "log", "\"Version: \"%s", "\"Version: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0108)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0109", "log", "\"Network error: \"%s\" - \"%s", "\"Network error: \"%s\" - \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0109)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0110", "log", "\"Network progress: \"%s\"% - \"%s", "\"Network progress: \"%s\"% - \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0110)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0111", "log", "\"NetworkManager initialized\"", "\"NetworkManager initialized\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0111)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0112", "log", "\"Starting communication managers...\"", "\"Starting communication managers...\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0112)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0113", "log", "\"Cleaning up communication managers...\"", "\"Cleaning up communication managers...\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0113)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0114", "log", "\"BluetoothManager cleaned up\"", "\"BluetoothManager cleaned up\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0114)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0115", "log", "\"Error cleaning up BluetoothManager\"", "\"Error cleaning up BluetoothManager\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0115)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0116", "log", "\"UsbConnectionManager cleaned up\"", "\"UsbConnectionManager cleaned up\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0116)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0117", "log", "\"Error cleaning up UsbConnectionManager\"", "\"Error cleaning up UsbConnectionManager\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0117)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0118", "log", "\"NetworkManager cleaned up\"", "\"NetworkManager cleaned up\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0118)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0119", "log", "\"Error cleaning up NetworkManager\"", "\"Error cleaning up NetworkManager\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0119)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0120", "log", "\"TimerManager cleaned up\"", "\"TimerManager cleaned up\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0120)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0121", "log", "\"Error cleaning up TimerManager\"", "\"Error cleaning up TimerManager\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0121)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0122", "log", "\"Manager cleanup complete\"", "\"Manager cleanup complete\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0122)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0123", "log", "\"arrTestItems or listItemAdapter not initialized yet, skipping message processing\"", "\"arrTestItems or listItemAdapter not initialized yet, skipping message processing\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0123)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0124", "log", "\"Control mode: ST0101 response received (\" + controlSt0101SuccessCount + \"/\" + CONTROL_ST0101_REQUIRED_COUNT + \")\"", "\"Control mode: ST0101 response received (\" + controlSt0101SuccessCount + \"/\" + CONTROL_ST0101_REQUIRED_COUNT + \")\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0124)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0125", "log", "\"Control mode: ST0101 responses completed. Entering control mode.\"", "\"Control mode: ST0101 responses completed. Entering control mode.\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0125)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0126", "log", "\"Control mode: Waiting for more ST0101 responses to enter control mode.\"", "\"Control mode: Waiting for more ST0101 responses to enter control mode.\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0126)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0127", "log", "\"Control mode: ST0101 received, setting control test ready state\"", "\"Control mode: ST0101 received, setting control test ready state\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0127)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0128", "log", "\"Header message set to 'ì ì´ ì¤ë¹ ìë£'\"", "\"Header message set to 'ì ì´ ì¤ë¹ ìë£'\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0128)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0129", "log", "\"Failed to set header message\"", "\"Failed to set header message\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0129)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0130", "log", "\"Control test ready state set, waiting for web control commands\"", "\"Control test ready state set, waiting for web control commands\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0130)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0131", "log", "\"Test entry blocked: USB or Bluetooth not ready\"", "\"Test entry blocked: USB or Bluetooth not ready\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0131)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0132", "log", "\"listItemAdapter not ready, cannot update test item result\"", "\"listItemAdapter not ready, cannot update test item result\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0132)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0133", "log", "\"testProcessId started: \"%s", "\"testProcessId started: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0133)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0134", "log", "\"Unfinished restart timer already running, skipping start\"", "\"Unfinished restart timer already running, skipping start\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0134)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0135", "log", "\"tmrUnfinishedRestart ê²ì¬ ì´íë¦¬ì¼ì´ì ì¢ë£ ì¤í¨ ì¬ìì [%d / %d]\"", "\"tmrUnfinishedRestart ê²ì¬ ì´íë¦¬ì¼ì´ì ì¢ë£ ì¤í¨ ì¬ìì [%d / %d]\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0135)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0136", "log", "\"Error starting unfinished restart timer\"", "\"Error starting unfinished restart timer\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0136)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0137", "log", "\"USB Service started\"", "\"USB Service started\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0137)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0138", "log", "\"USB Service start error\"", "\"USB Service start error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0138)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0139", "log", "\">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> AAA \"%s", "\">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> AAA \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0139)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0140", "log", "\"readMessage is null or empty, skipping message processing\"", "\"readMessage is null or empty, skipping message processing\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0140)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0141", "log", "\"STX character not found in readMessage: \"%s", "\"STX character not found in readMessage: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0141)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0142", "log", "\"readMessage too short. Length: \"%s\", Required: \"%s\", Message: \"%s", "\"readMessage too short. Length: \"%s\", Required: \"%s\", Message: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0142)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0143", "log", "\"StringIndexOutOfBoundsException while parsing readMessage: \"%s\", STX index: \"%s", "\"StringIndexOutOfBoundsException while parsing readMessage: \"%s\", STX index: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0143)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0144", "log", "\"receiveCommand is null or empty, skipping database query\"", "\"receiveCommand is null or empty, skipping database query\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0144)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0145", "log", "\"lstSpecData is null or empty for command: \"%s\" (DB ë° ë©ëª¨ë¦¬ ìºì ëª¨ë íì¸ë¨)\"", "\"lstSpecData is null or empty for command: \"%s\" (DB ë° ë©ëª¨ë¦¬ ìºì ëª¨ë íì¸ë¨)\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0145)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0146", "log", "\"Error in initial UI update\"", "\"Error in initial UI update\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0146)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0147", "log", "\">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> BBB \"%s", "\">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> BBB \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0147)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0148", "log", "\"Thread execution error\"", "\"Thread execution error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0148)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0149", "log", "\"Control test condition met: \" + controlCurrentTestItem + \" (response: \" + finalReceiveCommandResponse + \")\"", "\"Control test condition met: \" + controlCurrentTestItem + \" (response: \" + finalReceiveCommandResponse + \")\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0149)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0150", "log", "\"Control test item completed (condition met): \"%s", "\"Control test item completed (condition met): \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0150)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0151", "log", "\"Error collecting listItemAdapter data\"", "\"Error collecting listItemAdapter data\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0151)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0152", "log", "\"Error saving SharedPreferences in background thread\"", "\"Error saving SharedPreferences in background thread\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0152)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0153", "log", "\"Error closing socket\"", "\"Error closing socket\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0153)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0154", "log", "\"Error saving test_info SharedPreferences in background thread\"", "\"Error saving test_info SharedPreferences in background thread\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0154)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0155", "log", "\"Error saving test history to database in background thread\"", "\"Error saving test history to database in background thread\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0155)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0156", "log", "\"Finished restart timer already running, skipping start\"", "\"Finished restart timer already running, skipping start\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0156)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0157", "log", "\"Error starting finished restart timer\"", "\"Error starting finished restart timer\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0157)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0158", "log", "\"Thread execution error in RE0101\"", "\"Thread execution error in RE0101\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0158)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0159", "log", "\"Error in background processing\"", "\"Error in background processing\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0159)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0160", "log", "\"Bluetooth message handling error\"", "\"Bluetooth message handling error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0160)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0161", "log", "\"Bluetooth handler error\"", "\"Bluetooth handler error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0161)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0162", "log", "\"Directory creation - IOException\"", "\"Directory creation - IOException\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0162)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0163", "log", "\">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CCC \"%s", "\">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CCC \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0163)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0164", "log", "\"Error during async initialization\"", "\"Error during async initialization\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0164)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0165", "log", "\"Temperature data read error\"", "\"Temperature data read error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0165)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0166", "log", "\"Test spec data [%d]: %s\"", "\"Test spec data [%d]: %s\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0166)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0167", "log", "\"Server connection error\"", "\"Server connection error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0167)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0168", "log", "\"lstSpecData error: \"%s", "\"lstSpecData error: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0168)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0169", "log", "\"HTTP OK ìë¨\"\" (ìë \"%s\", code=\"%s\")\"", "\"HTTP OK ìë¨\"\" (ìë \"%s\", code=\"%s\")\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0169)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0170", "log", "\"HTTP result update error\"\" (ìë \"%s\"): \"%s", "\"HTTP result update error\"\" (ìë \"%s\"): \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0170)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0171", "log", "\"HTTP ì¬ìë ëê¸° ì¤ ì¸í°ë½í¸ ë°ì\"", "\"HTTP ì¬ìë ëê¸° ì¤ ì¸í°ë½í¸ ë°ì\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0171)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0172", "log", "\"Error updating HTTP success status in test history\"", "\"Error updating HTTP success status in test history\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0172)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0173", "log", "\"Error saving linear data to test history\"", "\"Error saving linear data to test history\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0173)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0174", "log", "\"UsbManager is null\"", "\"UsbManager is null\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0174)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0175", "log", "\"Start UsbService failed: \"%s", "\"Start UsbService failed: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0175)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0176", "log", "\"usbSearch error\"", "\"usbSearch error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0176)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0177", "log", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 0\"", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 0\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0177)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0178", "log", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 1\"", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 1\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0178)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0179", "log", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 2\"", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 2\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0179)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0180", "log", "\"Bluetooth connected thread cancelled in finishApplication\"", "\"Bluetooth connected thread cancelled in finishApplication\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0180)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0181", "log", "\"Error canceling Bluetooth connected thread in finishApplication: \"%s", "\"Error canceling Bluetooth connected thread in finishApplication: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0181)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0182", "log", "\"Bluetooth handler queue cleared in finishApplication\"", "\"Bluetooth handler queue cleared in finishApplication\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0182)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0183", "log", "\"Bluetooth socket closed in finishApplication\"", "\"Bluetooth socket closed in finishApplication\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0183)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0184", "log", "\"Error closing Bluetooth socket in finishApplication: \"%s", "\"Error closing Bluetooth socket in finishApplication: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0184)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0185", "log", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 3\"", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 3\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0185)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0186", "log", "\"finding Bluetooth devices error\"", "\"finding Bluetooth devices error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0186)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0187", "log", "\"error occurred while bluetooth devices reconnecting in finishApplication\"", "\"error occurred while bluetooth devices reconnecting in finishApplication\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0187)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0188", "log", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 4\"", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 4\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0188)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0189", "log", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 5\"", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 5\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0189)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0190", "log", "\"USB service restart failed: \"%s", "\"USB service restart failed: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0190)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0191", "log", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 7\"", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 7\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0191)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0192", "log", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 8\"", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 8\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0192)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0193", "log", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 9\"", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 9\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0193)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0194", "log", "\"Thread sleep error\"", "\"Thread sleep error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0194)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0195", "log", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 10\"", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 10\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0195)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0196", "log", "\"Before save to SharedPreferences - globalModelId: \"%s\", globalModelName: \"%s\", globalModelNation: \"%s", "\"Before save to SharedPreferences - globalModelId: \"%s\", globalModelName: \"%s\", globalModelNation: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0196)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0197", "log", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 11\"", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 11\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0197)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0198", "log", "\"After save to SharedPreferences - TEST_MODEL_ID: \"%s\", TEST_MODEL_NAME: \"%s\", TEST_MODEL_NATION: \"%s", "\"After save to SharedPreferences - TEST_MODEL_ID: \"%s\", TEST_MODEL_NAME: \"%s\", TEST_MODEL_NATION: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0198)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0199", "log", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 12\"", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 12\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0199)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0200", "log", "\"Intent Extra after putExtra - TEST_MODEL_ID: \"%s\", TEST_MODEL_NAME: \"%s\", TEST_MODEL_NATION: \"%s\", TEST_START_DATETIME: \"%s", "\"Intent Extra after putExtra - TEST_MODEL_ID: \"%s\", TEST_MODEL_NAME: \"%s\", TEST_MODEL_NATION: \"%s\", TEST_START_DATETIME: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0200)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0201", "log", "\"Activity restarted successfully\"", "\"Activity restarted successfully\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0201)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0202", "log", "\"Failed to restart Activity\"", "\"Failed to restart Activity\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0202)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0203", "log", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 13\"", "\"finishApplication: ì¬íì ë° ì¬ì°ê²° ìë ìì >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 13\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0203)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0204", "log", "\"Application restart/finish error\"", "\"Application restart/finish error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0204)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0205", "log", "\"Processing HTTP response data\"", "\"Processing HTTP response data\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0205)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0206", "log", "\"Deleting test spec data\"", "\"Deleting test spec data\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0206)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0207", "log", "\"Test spec data deleted\"", "\"Test spec data deleted\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0207)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0208", "log", "\"JSON parsing error\"", "\"JSON parsing error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0208)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0209", "log", "\"Test spec array is empty\"", "\"Test spec array is empty\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0209)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0210", "log", "\"Starting timer cleanup...\"", "\"Starting timer cleanup...\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0210)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0211", "log", "\"Error stopping BT connection indicator\"", "\"Error stopping BT connection indicator\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0211)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0212", "log", "\">>>>>>>>>>>>>>>>>>>>>>>> stopUsbPolling 1\"", "\">>>>>>>>>>>>>>>>>>>>>>>> stopUsbPolling 1\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0212)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0213", "log", "\"Error stopping USB polling\"", "\"Error stopping USB polling\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0213)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0214", "log", "\"Error stopping BT message timer\"", "\"Error stopping BT message timer\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0214)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0215", "log", "\"Error cleaning up finished restart timer\"", "\"Error cleaning up finished restart timer\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0215)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0216", "log", "\"Error cleaning up unfinished restart timer\"", "\"Error cleaning up unfinished restart timer\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0216)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0217", "log", "\"Error cleaning up remote command timer\"", "\"Error cleaning up remote command timer\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0217)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0218", "log", "\"Error cleaning up checkDuration timer\"", "\"Error cleaning up checkDuration timer\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0218)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0219", "log", "\"Error cleaning up barcode request timer\"", "\"Error cleaning up barcode request timer\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0219)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0220", "log", "\"Error cleaning up app reset timer task\"", "\"Error cleaning up app reset timer task\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0220)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0221", "log", "\"All timers cleaned up successfully\"", "\"All timers cleaned up successfully\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0221)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0222", "log", "\"btWorkerExecutor is shutdown, cannot execute task\"", "\"btWorkerExecutor is shutdown, cannot execute task\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0222)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0223", "log", "\"Task rejected from btWorkerExecutor: \"%s", "\"Task rejected from btWorkerExecutor: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0223)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0224", "log", "\"Missing BLUETOOTH_CONNECT permission; cannot read bonded devices\"", "\"Missing BLUETOOTH_CONNECT permission; cannot read bonded devices\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0224)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0225", "log", "\"Failed to obtain bonded devices\"", "\"Failed to obtain bonded devices\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0225)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0226", "log", "\"Missing BLUETOOTH_SCAN permission; cannot cancel discovery\"", "\"Missing BLUETOOTH_SCAN permission; cannot cancel discovery\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0226)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0227", "log", "\"Failed to cancel discovery safely\"", "\"Failed to cancel discovery safely\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0227)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0228", "log", "\">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Permission B.requestRuntimePermissions getRequiredPermissions().length \"%s", "\">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Permission B.requestRuntimePermissions getRequiredPermissions().length \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0228)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0229", "log", "\">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Permission B.requestRuntimePermissions permission \"%s\" : \"%s", "\">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Permission B.requestRuntimePermissions permission \"%s\" : \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0229)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0230", "log", "\"> resetBluetoothSessionKeepUsb\"", "\"> resetBluetoothSessionKeepUsb\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0230)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0231", "log", "\">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> testOkCnt \"%s\" testNgCnt \"%s", "\">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> testOkCnt \"%s\" testNgCnt \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0231)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0232", "log", "\">>>>>>>>>>>>>>>>>>>>>>>> startUsbPolling 2\"", "\">>>>>>>>>>>>>>>>>>>>>>>> startUsbPolling 2\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0232)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0233", "log", "\"USB polling executor is shut down; cannot schedule polling\"", "\"USB polling executor is shut down; cannot schedule polling\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0233)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0234", "log", "\"UsbService is null; skipping polling start\"", "\"UsbService is null; skipping polling start\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0234)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0235", "log", "\"USB permission not granted; skipping polling start\"", "\"USB permission not granted; skipping polling start\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0235)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0236", "log", "\"USB command queue initialized and started\"", "\"USB command queue initialized and started\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0236)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0237", "log", "\"USB polling already running; skipping restart\"", "\"USB polling already running; skipping restart\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0237)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0238", "log", "\">>>>>>>>>>>>>>>>>>>>>>>> stopUsbPolling 2\"", "\">>>>>>>>>>>>>>>>>>>>>>>> stopUsbPolling 2\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0238)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0239", "log", "\">>>>>>>>>>>>>>>>>>>>>>>> stopUsbPolling 2-1 usbPollingEnabled:\"%s\" usbService:\"%s", "\">>>>>>>>>>>>>>>>>>>>>>>> stopUsbPolling 2-1 usbPollingEnabled:\"%s\" usbService:\"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0239)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0240", "log", "\">>>>>>>>>>>>>>>>>>>>>>>> stopUsbPolling 3\"", "\">>>>>>>>>>>>>>>>>>>>>>>> stopUsbPolling 3\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0240)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0241", "log", "\"UsbService or command queue is null; stopping polling\"", "\"UsbService or command queue is null; stopping polling\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0241)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0242", "log", "\">>>>>>>>>>>>>>>>>>>>>>>> stopUsbPolling 4\"", "\">>>>>>>>>>>>>>>>>>>>>>>> stopUsbPolling 4\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0242)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0243", "log", "\"Failed to enqueue polling command (queue may be full)\"", "\"Failed to enqueue polling command (queue may be full)\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0243)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0244", "log", "\"USB polling failure threshold reached; backing off\"", "\"USB polling failure threshold reached; backing off\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0244)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0245", "log", "\"USB service error\"", "\"USB service error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0245)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0246", "log", "\"USB polling scheduled (interval: \" + usbPollingIntervalMs + \" ms)\"", "\"USB polling scheduled (interval: \" + usbPollingIntervalMs + \" ms)\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0246)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0247", "log", "\"Failed to schedule USB polling\"", "\"Failed to schedule USB polling\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0247)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0248", "log", "\"USB polling stopped\"", "\"USB polling stopped\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0248)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0249", "log", "\"USB command queue is not running, cannot send command: \"%s", "\"USB command queue is not running, cannot send command: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0249)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0250", "log", "\"Invalid command, cannot send: \"%s", "\"Invalid command, cannot send: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0250)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0251", "log", "\"USB command enqueued: \"%s", "\"USB command enqueued: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0251)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0252", "log", "\"Failed to enqueue USB command: \"%s", "\"Failed to enqueue USB command: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0252)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0253", "log", "\">>>>>>>>>>>>>>>>>>>>>>>> startUsbPolling 4\"", "\">>>>>>>>>>>>>>>>>>>>>>>> startUsbPolling 4\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0253)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0254", "log", "\"USB reconnect failed after \" + usbReconnectAttempts + \" attempts\"", "\"USB reconnect failed after \" + usbReconnectAttempts + \" attempts\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0254)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0255", "log", "\">>>>>>>>>>>>>>>>>>>>>>>> stopUsbPolling 6\"", "\">>>>>>>>>>>>>>>>>>>>>>>> stopUsbPolling 6\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0255)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0256", "log", "\"USB reconnect attempt failed\"", "\"USB reconnect attempt failed\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0256)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0257", "log", "\"> 2.usbConnPermissionGranted \"%s\" / usbService \"%s\" / usbPollingEnabled \"%s", "\"> 2.usbConnPermissionGranted \"%s\" / usbService \"%s\" / usbPollingEnabled \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0257)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0258", "log", "\"> 2.isUsbReady() \"%s\" / isBluetoothReady() \"%s", "\"> 2.isUsbReady() \"%s\" / isBluetoothReady() \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0258)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0259", "log", "\"USB permission already granted; skipping recovery scheduling\"", "\"USB permission already granted; skipping recovery scheduling\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0259)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0260", "log", "\"USB permission granted before recovery runnable executed\"", "\"USB permission granted before recovery runnable executed\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0260)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0261", "log", "\"Attempting USB permission recovery\"", "\"Attempting USB permission recovery\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0261)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0262", "log", "\"Error while setting USB filters during recovery\"", "\"Error while setting USB filters during recovery\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0262)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0263", "log", "\"Error while rebinding USB service during recovery\"", "\"Error while rebinding USB service during recovery\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0263)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0264", "log", "\"Bluetooth adapter null, skipping reconnect\"", "\"Bluetooth adapter null, skipping reconnect\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0264)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0265", "log", "\"BLUETOOTH_CONNECT permission missing; cannot attempt reconnect\"", "\"BLUETOOTH_CONNECT permission missing; cannot attempt reconnect\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0265)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0266", "log", "\"Bluetooth adapter disabled, skipping reconnect\"", "\"Bluetooth adapter disabled, skipping reconnect\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0266)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0267", "log", "\"No paired Bluetooth devices available\"", "\"No paired Bluetooth devices available\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0267)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0268", "log", "\"BLUETOOTH_CONNECT permission not granted\"", "\"BLUETOOTH_CONNECT permission not granted\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0268)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0269", "log", "\"ì´ë¯¸ ì°ê²°ë ë¸ë£¨í¬ì¤ ì¥ë¹ ì ì§: %s / %s\"", "\"ì´ë¯¸ ì°ê²°ë ë¸ë£¨í¬ì¤ ì¥ë¹ ì ì§: %s / %s\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0269)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0270", "log", "\"â CRITICAL: btSocket.connect() called on UI thread! This will cause ANR!\"", "\"â CRITICAL: btSocket.connect() called on UI thread! This will cause ANR!\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0270)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0271", "log", "\"Bluetooth socket connection error\"", "\"Bluetooth socket connection error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0271)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0272", "log", "\"Failed to check Bluetooth device connection state\"", "\"Failed to check Bluetooth device connection state\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0272)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0273", "log", "\"Error in UI update\"", "\"Error in UI update\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0273)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0274", "log", "\"Error in immediate UI update\"", "\"Error in immediate UI update\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0274)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0275", "log", "\"Error in UI update batch\"", "\"Error in UI update batch\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0275)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0276", "log", "\"finalReceiveCommand is null or empty, skipping database query\"", "\"finalReceiveCommand is null or empty, skipping database query\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0276)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0277", "log", "\"Error querying test spec data for command: \"%s", "\"Error querying test spec data for command: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0277)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0278", "log", "\"Unable to compute SHA-256 hash\"", "\"Unable to compute SHA-256 hash\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0278)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0279", "log", "\"Bluetooth adapter not available\"", "\"Bluetooth adapter not available\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0279)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0280", "log", "\"sendBtMessage CM0200 -> CM0100: \"%s", "\"sendBtMessage CM0200 -> CM0100: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0280)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0281", "log", "\">>>>>>>>>> sendBtMessage.sendMessage \"%s", "\">>>>>>>>>> sendBtMessage.sendMessage \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0281)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0282", "log", "\"sendBtMessage error\"", "\"sendBtMessage error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0282)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0283", "log", "\"Bluetooth adapter unavailable; cannot list devices\"", "\"Bluetooth adapter unavailable; cannot list devices\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0283)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0284", "log", "\"íì´ë§ë ë¸ë£¨í¬ì¤ ì¥ë¹ - enabled: %s, count: %d, entranceCheck: %s\"", "\"íì´ë§ë ë¸ë£¨í¬ì¤ ì¥ë¹ - enabled: %s, count: %d, entranceCheck: %s\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0284)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0285", "log", "\"listPairedDevicesSelect error\"", "\"listPairedDevicesSelect error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0285)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0286", "log", "\"Bluetooth connection failed!\"", "\"Bluetooth connection failed!\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0286)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0287", "log", "\"Connection attempt timed out and was canceled.\"", "\"Connection attempt timed out and was canceled.\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0287)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0288", "log", "\"Bluetooth cancel connection error\"", "\"Bluetooth cancel connection error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0288)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0289", "log", "\"Error canceling Bluetooth thread during cancelConnection: \"%s", "\"Error canceling Bluetooth thread during cancelConnection: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0289)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0290", "log", "\"Could not create Insecure RFComm Connection\"", "\"Could not create Insecure RFComm Connection\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0290)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0291", "log", "\"USB intent action: \"%s", "\"USB intent action: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0291)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0292", "log", "\"USB permission granted - starting polling\"", "\"USB permission granted - starting polling\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0292)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0293", "log", "\">>>>>>>>>>>>>>>>>>>>>>>> stopUsbPolling 7\"", "\">>>>>>>>>>>>>>>>>>>>>>>> stopUsbPolling 7\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0293)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0294", "log", "\">>>>>>>>>>>>>>>>>>>>>>>> stopUsbPolling 8\"", "\">>>>>>>>>>>>>>>>>>>>>>>> stopUsbPolling 8\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0294)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0295", "log", "\"USB Connection state: \"%s", "\"USB Connection state: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0295)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0296", "log", "\"USB command queue initialized\"", "\"USB command queue initialized\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0296)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0297", "log", "\">>>>>>>>>>>>>>>>>>>>>>>> USB Handler ë±ë¡ ì : usbHandler=\"%s", "\">>>>>>>>>>>>>>>>>>>>>>>> USB Handler ë±ë¡ ì : usbHandler=\"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0297)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0298", "log", "\">>>>>>>>>>>>>>>>>>>>>>>> USB Handler ìë¡ ìì±\"", "\">>>>>>>>>>>>>>>>>>>>>>>> USB Handler ìë¡ ìì±\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0298)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0299", "log", "\">>>>>>>>>>>>>>>>>>>>>>>> USB Handler ë±ë¡ ìë£\"", "\">>>>>>>>>>>>>>>>>>>>>>>> USB Handler ë±ë¡ ìë£\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0299)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0300", "log", "\">>>>>>>>>>>>>>>>>>>>>>>> USB Handlerê° nullìëë¤!\"", "\">>>>>>>>>>>>>>>>>>>>>>>> USB Handlerê° nullìëë¤!\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0300)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0301", "log", "\"USB Handler is null, cannot register with UsbService\"", "\"USB Handler is null, cannot register with UsbService\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0301)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0302", "log", "\"USB Service connected successfully\"", "\"USB Service connected successfully\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0302)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0303", "log", "\"USB ìë¹ì¤ ì°ê²°ë¨. ìë ì°ê²° ë©ìì§ ì ì¡ ì¤ë¹\"", "\"USB ìë¹ì¤ ì°ê²°ë¨. ìë ì°ê²° ë©ìì§ ì ì¡ ì¤ë¹\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0303)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0304", "log", "\"USB ê¶íì´ ì´ë¯¸ ë¶ì¬ëì´ ìì. ìë ì°ê²° ë©ìì§ ì ì¡ ìì\"", "\"USB ê¶íì´ ì´ë¯¸ ë¶ì¬ëì´ ìì. ìë ì°ê²° ë©ìì§ ì ì¡ ìì\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0304)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0305", "log", "\">>>>>>>>>>>>>>>>>>>>>>>> startUsbPolling 5\"", "\">>>>>>>>>>>>>>>>>>>>>>>> startUsbPolling 5\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0305)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0306", "log", "\"USB ê¶í ëê¸° ì¤. ê¶í ë¶ì¬ í ìë ì°ê²° ììë¨\"", "\"USB ê¶í ëê¸° ì¤. ê¶í ë¶ì¬ í ìë ì°ê²° ììë¨\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0306)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0307", "log", "\"USB ì°ê²° Timerê° ì´ë¯¸ ì¤í ì¤ìëë¤.\"", "\"USB ì°ê²° Timerê° ì´ë¯¸ ì¤í ì¤ìëë¤.\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0307)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0308", "log", "\"UsbService is null after binding\"", "\"UsbService is null after binding\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0308)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0309", "log", "\"Invalid binder type. Expected UsbService.UsbBinder, got: \"%s", "\"Invalid binder type. Expected UsbService.UsbBinder, got: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0309)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0310", "log", "\"ClassCastException in onServiceConnected\"", "\"ClassCastException in onServiceConnected\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0310)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0311", "log", "\"USB Service disconnected\"", "\"USB Service disconnected\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0311)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0312", "log", "\"Bluetooth permissions granted on resume\"", "\"Bluetooth permissions granted on resume\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0312)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0313", "log", "\"USB receiver registered but service is null, attempting rebind\"", "\"USB receiver registered but service is null, attempting rebind\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0313)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0314", "log", "\"USB service already initialized, skipping onResume setup\"", "\"USB service already initialized, skipping onResume setup\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0314)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0315", "log", "\"onResume USB service error\"", "\"onResume USB service error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0315)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0316", "log", "\"USB reconnected - onNewIntent called\"", "\"USB reconnected - onNewIntent called\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0316)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0317", "log", "\">>>>>>>>>>>>>>>>>>>>>>>> startUsbPolling 1\"", "\">>>>>>>>>>>>>>>>>>>>>>>> startUsbPolling 1\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0317)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0318", "log", "\"USB polling restarted after reconnection\"", "\"USB polling restarted after reconnection\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0318)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0319", "log", "\"Error in handleUsbReconnection\"", "\"Error in handleUsbReconnection\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0319)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0320", "log", "\"Failed to reset state for USB reconnect\"", "\"Failed to reset state for USB reconnect\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0320)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0321", "log", "\">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> resetCnt \"%s\" usbReconnectAttempts \"%s", "\">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> resetCnt \"%s\" usbReconnectAttempts \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0321)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0322", "log", "\"USB service already active; skipping restart\"", "\"USB service already active; skipping restart\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0322)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0323", "log", "\"USB service bind attempt: \"%s", "\"USB service bind attempt: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0323)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0324", "log", "\"USB receiver already registered: \"%s", "\"USB receiver already registered: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0324)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0325", "log", "\"setFilters error\"", "\"setFilters error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0325)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0326", "log", "\"â¶ [US] UsbHandler ìì±: Looper=\"%s\", Thread=\"%s", "\"â¶ [US] UsbHandler ìì±: Looper=\"%s\", Thread=\"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0326)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0327", "log", "\"UsbHandler message processing error\"", "\"UsbHandler message processing error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0327)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0328", "log", "\"readTemperatureExcel IOException\"", "\"readTemperatureExcel IOException\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0328)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0329", "log", "\"readTemperatureExcel BiffException\"", "\"readTemperatureExcel BiffException\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0329)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0330", "log", "\"readTemperatureExcel error\"", "\"readTemperatureExcel error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0330)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0331", "log", "\"><><><>>>>>>>>>>>>>>>>>>>> urlStrBarcode \"%s", "\"><><><>>>>>>>>>>>>>>>>>>>> urlStrBarcode \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0331)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0332", "log", "\"ì í ìë¦¬ì¼ ë²í¸ ì ë³´ í¸ì¶: %s (code: %d, OK: %s)\"", "\"ì í ìë¦¬ì¼ ë²í¸ ì ë³´ í¸ì¶: %s (code: %d, OK: %s)\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0332)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0333", "log", "\"ì í ìë¦¬ì¼ ë²í¸ ì ë³´ í¸ì¶ ì±ê³µ (code: %d)\"", "\"ì í ìë¦¬ì¼ ë²í¸ ì ë³´ í¸ì¶ ì±ê³µ (code: %d)\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0333)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0334", "log", "\"ì í ìë¦¬ì¼ ë²í¸ ì ë³´ í¸ì¶ data received\"", "\"ì í ìë¦¬ì¼ ë²í¸ ì ë³´ í¸ì¶ data received\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0334)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0335", "log", "\"Error closing reader in RequestThreadBarcode\"", "\"Error closing reader in RequestThreadBarcode\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0335)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0336", "log", "\"ì í ìë¦¬ì¼ ë²í¸ ì ë³´ í¸ì¶ ì¤í¨ (code: %d)\"", "\"ì í ìë¦¬ì¼ ë²í¸ ì ë³´ í¸ì¶ ì¤í¨ (code: %d)\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0336)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0337", "log", "\"RequestThreadBarcode error\"", "\"RequestThreadBarcode error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0337)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0338", "log", "\"jsonParsingBarcode ìëµ: \"%s", "\"jsonParsingBarcode ìëµ: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0338)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0339", "log", "\"jsonParsingBarcode - globalProductSerialNo JSON received\"", "\"jsonParsingBarcode - globalProductSerialNo JSON received\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0339)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0340", "log", "\"testItemArray.length(): \"%s", "\"testItemArray.length(): \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0340)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0341", "log", "\"lstData.size(): \"%s", "\"lstData.size(): \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0341)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0342", "log", "\"ì í ìë¦¬ì¼ ë²í¸ ì ë³´ í¸ì¶[%d]: %s\"", "\"ì í ìë¦¬ì¼ ë²í¸ ì ë³´ í¸ì¶[%d]: %s\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0342)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0343", "log", "\"Product serial parsing error\"", "\"Product serial parsing error\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0343)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0344", "log", "\"globalProductSerialNo: %s, productSerialNo: %s\"", "\"globalProductSerialNo: %s, productSerialNo: %s\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0344)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0345", "log", "\"jsonParsingBarcode JSONException\"", "\"jsonParsingBarcode JSONException\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0345)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0346", "log", "\"All resources cleaned up successfully\"", "\"All resources cleaned up successfully\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0346)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0347", "log", "\"Error cleaning up resources\"", "\"Error cleaning up resources\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0347)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0348", "log", "\"Resetting ActivityModel_0002 state\"", "\"Resetting ActivityModel_0002 state\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0348)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0349", "log", "\"Activity state reset completed\"", "\"Activity state reset completed\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0349)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0350", "log", "\"Failed to reset Activity state\"", "\"Failed to reset Activity state\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0350)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0351", "log", "\">>>>>>>>>>>>>>>>>>>>>>>> stopUsbPolling 9\"", "\">>>>>>>>>>>>>>>>>>>>>>>> stopUsbPolling 9\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0351)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0352", "log", "\"USB receiver already unregistered\"", "\"USB receiver already unregistered\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0352)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0353", "log", "\"USB service already unbound\"", "\"USB service already unbound\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0353)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0354", "log", "\"Error stopping USB service: \"%s", "\"Error stopping USB service: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0354)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0355", "log", "\"Error cleaning up USB resources\"", "\"Error cleaning up USB resources\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0355)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0356", "log", "\"Error canceling Bluetooth thread: \"%s", "\"Error canceling Bluetooth thread: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0356)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0357", "log", "\"Error closing Bluetooth socket: \"%s", "\"Error closing Bluetooth socket: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0357)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0358", "log", "\"Error cleaning up Bluetooth resources\"", "\"Error cleaning up Bluetooth resources\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0358)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0359", "log", "\"Error canceling test task thread: \"%s", "\"Error canceling test task thread: \"%s", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0359)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0360", "log", "\"Error cleaning up AsyncTasks\"", "\"Error cleaning up AsyncTasks\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0360)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0361", "log", "\"Error cleaning up HTTP connections\"", "\"Error cleaning up HTTP connections\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0361)", "0", timestamp, timestamp},
+                {"log.activity_model_test_process.0362", "log", "\"Error setting up kiosk mode\"", "\"Error setting up kiosk mode\"", "", "", "ActivityModelTestProcess log (log.activity_model_test_process.0362)", "0", timestamp, timestamp},
+            };
+
+            db.beginTransaction();
+            try {
+                String sql = "INSERT OR IGNORE INTO tbl_string_resources (" +
+                        "clm_string_key, clm_string_category, clm_string_ko, clm_string_en, clm_string_zh, clm_string_ja, " +
+                        "clm_description, clm_is_user_visible, clm_created_timestamp, clm_updated_timestamp) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+                for (String[] row : logStrings) {
+                    db.execSQL(sql, row);
+                }
+
+                db.setTransactionSuccessful();
+                Log.i(TAG, "> TestData.migrateActivityModelTestProcessLogStrings: Migrated " + logStrings.length + " log strings");
+            } finally {
+                db.endTransaction();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "> TestData.migrateActivityModelTestProcessLogStrings.e.1 : " + e);
+        } finally {
+            if (helper != null) {
+                helper.close();
+            }
+        }
+    }
+
+    public static void insertStringResource(Context context, String key, String category, String ko, String en,
+                                            String zh, String ja, String description, int isUserVisible) {
+        DBHelper helper = null;
+        SQLiteDatabase db = null;
+
+        try {
+            helper = new DBHelper(context, "itf_temperature_table.db", null, DATABASE_VERSION);
+            db = helper.getWritableDatabase();
+
+            String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+            ContentValues values = new ContentValues();
+            values.put("clm_string_key", key);
+            values.put("clm_string_category", category);
+            values.put("clm_string_ko", ko);
+            values.put("clm_string_en", en);
+            values.put("clm_string_zh", zh);
+            values.put("clm_string_ja", ja);
+            values.put("clm_description", description);
+            values.put("clm_is_user_visible", isUserVisible);
+            values.put("clm_created_timestamp", timestamp);
+            values.put("clm_updated_timestamp", timestamp);
+
+            db.insertWithOnConflict("tbl_string_resources", null, values, SQLiteDatabase.CONFLICT_IGNORE);
+        } catch (Exception e) {
+            Log.e(TAG, "> TestData.insertStringResource.e : " + e);
+        } finally {
+            if (helper != null) {
+                helper.close();
+            }
+        }
+    }
+
+    public static void updateStringResource(Context context, String key, String category, String ko, String en,
+                                            String zh, String ja, String description, int isUserVisible) {
+        DBHelper helper = null;
+        SQLiteDatabase db = null;
+
+        try {
+            helper = new DBHelper(context, "itf_temperature_table.db", null, DATABASE_VERSION);
+            db = helper.getWritableDatabase();
+
+            String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+            ContentValues values = new ContentValues();
+            values.put("clm_string_category", category);
+            values.put("clm_string_ko", ko);
+            values.put("clm_string_en", en);
+            values.put("clm_string_zh", zh);
+            values.put("clm_string_ja", ja);
+            values.put("clm_description", description);
+            values.put("clm_is_user_visible", isUserVisible);
+            values.put("clm_updated_timestamp", timestamp);
+
+            db.update("tbl_string_resources", values, "clm_string_key = ?", new String[] { key });
+        } catch (Exception e) {
+            Log.e(TAG, "> TestData.updateStringResource.e : " + e);
+        } finally {
+            if (helper != null) {
+                helper.close();
+            }
+        }
+    }
+
+    public static void deleteStringResource(Context context, String key) {
+        DBHelper helper = null;
+        SQLiteDatabase db = null;
+
+        try {
+            helper = new DBHelper(context, "itf_temperature_table.db", null, DATABASE_VERSION);
+            db = helper.getWritableDatabase();
+            db.delete("tbl_string_resources", "clm_string_key = ?", new String[] { key });
+        } catch (Exception e) {
+            Log.e(TAG, "> TestData.deleteStringResource.e : " + e);
+        } finally {
+            if (helper != null) {
+                helper.close();
+            }
+        }
+    }
+
+    public static Map<String, String> getStringResourceByKey(Context context, String key) {
+        DBHelper helper = null;
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        Map<String, String> result = new HashMap<>();
+
+        try {
+            helper = new DBHelper(context, "itf_temperature_table.db", null, DATABASE_VERSION);
+            db = helper.getReadableDatabase();
+
+            cursor = db.rawQuery("SELECT * FROM tbl_string_resources WHERE clm_string_key = ?", new String[] { key });
+            if (cursor.moveToFirst()) {
+                result.put("clm_string_key", cursor.getString(cursor.getColumnIndexOrThrow("clm_string_key")));
+                result.put("clm_string_category", cursor.getString(cursor.getColumnIndexOrThrow("clm_string_category")));
+                result.put("clm_string_ko", cursor.getString(cursor.getColumnIndexOrThrow("clm_string_ko")));
+                result.put("clm_string_en", cursor.getString(cursor.getColumnIndexOrThrow("clm_string_en")));
+                result.put("clm_string_zh", cursor.getString(cursor.getColumnIndexOrThrow("clm_string_zh")));
+                result.put("clm_string_ja", cursor.getString(cursor.getColumnIndexOrThrow("clm_string_ja")));
+                result.put("clm_description", cursor.getString(cursor.getColumnIndexOrThrow("clm_description")));
+                result.put("clm_is_user_visible", String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow("clm_is_user_visible"))));
+                result.put("clm_created_timestamp", cursor.getString(cursor.getColumnIndexOrThrow("clm_created_timestamp")));
+                result.put("clm_updated_timestamp", cursor.getString(cursor.getColumnIndexOrThrow("clm_updated_timestamp")));
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "> TestData.getStringResourceByKey.e : " + e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (helper != null) {
+                helper.close();
+            }
+        }
+
+        return result;
+    }
+
+    public static List<Map<String, String>> getStringResourcesByCategory(Context context, String category) {
+        DBHelper helper = null;
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        List<Map<String, String>> result = new ArrayList<>();
+
+        try {
+            helper = new DBHelper(context, "itf_temperature_table.db", null, DATABASE_VERSION);
+            db = helper.getReadableDatabase();
+
+            cursor = db.rawQuery("SELECT * FROM tbl_string_resources WHERE clm_string_category = ?", new String[] { category });
+            while (cursor.moveToNext()) {
+                Map<String, String> row = new HashMap<>();
+                row.put("clm_string_key", cursor.getString(cursor.getColumnIndexOrThrow("clm_string_key")));
+                row.put("clm_string_category", cursor.getString(cursor.getColumnIndexOrThrow("clm_string_category")));
+                row.put("clm_string_ko", cursor.getString(cursor.getColumnIndexOrThrow("clm_string_ko")));
+                row.put("clm_string_en", cursor.getString(cursor.getColumnIndexOrThrow("clm_string_en")));
+                row.put("clm_string_zh", cursor.getString(cursor.getColumnIndexOrThrow("clm_string_zh")));
+                row.put("clm_string_ja", cursor.getString(cursor.getColumnIndexOrThrow("clm_string_ja")));
+                row.put("clm_description", cursor.getString(cursor.getColumnIndexOrThrow("clm_description")));
+                row.put("clm_is_user_visible", String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow("clm_is_user_visible"))));
+                row.put("clm_created_timestamp", cursor.getString(cursor.getColumnIndexOrThrow("clm_created_timestamp")));
+                row.put("clm_updated_timestamp", cursor.getString(cursor.getColumnIndexOrThrow("clm_updated_timestamp")));
+                result.add(row);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "> TestData.getStringResourcesByCategory.e : " + e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (helper != null) {
+                helper.close();
+            }
+        }
+
+        return result;
+    }
+
 }
