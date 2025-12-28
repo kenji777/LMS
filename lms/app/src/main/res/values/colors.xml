@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="red_01">#FFFF0000</color>
+    <color name="gray_04">#FF999999</color>
+    <color name="gray_05">#99CCCCCC</color>
+    <color name="grey_05">#FFEEEEEE</color>
+    <color name="grey_01">#FF333333</color>
+    <color name="grey_02">#FF666666</color>
+    <color name="default_button_color">#FF6750a4</color>
+    <color name="blue_for_ovio">#092c74</color>
+    <color name="blue_01">#2196F3</color>
+    <color name="blue_02">#402196F3</color>
+    <color name="yellow_01">#FFFFC107</color>
+    <color name="pink_01">#FF6B9D</color>
+    <color name="red_06">#33CC0000</color>
+    <color name="green_01">#FF8BC34A</color>
+    <color name="green_02">#4CAF50</color>
+    <color name="orange_01">#FFFF9800</color>
+    <color name="yellow_02">#33FFFE91</color>
+
+</resources>

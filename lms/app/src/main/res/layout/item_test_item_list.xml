@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_item_wall"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingLeft="0dp"
+    android:paddingTop="0dp"
+    android:paddingEnd="0dp"
+    android:paddingRight="0dp"
+    android:weightSum="100">
+
+    <LinearLayout
+        android:id="@+id/ll_test_list_item"
+        android:layout_width="fill_parent"
+        android:layout_height="65dp"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:orientation="horizontal"
+            android:padding="0dp"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/tv_test_item_seq"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="100"
+                android:fontFamily="@font/nanumsquarer"
+                android:gravity="center_vertical|center"
+                android:padding="0dp"
+                android:text=""
+                android:textColor="@color/grey_01"
+                android:textSize="22sp" />
+        </LinearLayout>
+
+        <!--
+        <ImageView
+            android:id="@+id/iv_icon"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="30"
+            android:background="#FFD9FA" />
+        -->
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="35"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/tv_test_item_name"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="100"
+                android:fontFamily="@font/nanumsquarer"
+                android:gravity="start|center_vertical"
+                android:padding="10dp"
+                android:text=""
+                android:textColor="@color/grey_01"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="45"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/tv_test_timestamp"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="0"
+                android:fontFamily="@font/nanumsquarer"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/grey_01"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/tv_test_item_value"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="0"
+                android:fontFamily="@font/nanumsquarer"
+                android:gravity="center|start"
+                android:textColor="@color/grey_01"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tv_test_temperature"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="15"
+                android:fontFamily="@font/nanumsquarer"
+                android:gravity="center|start"
+                android:textColor="@color/grey_01"
+                android:textSize="18sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_test_electric_val"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="15"
+                android:fontFamily="@font/nanumsquarer"
+                android:gravity="center|start"
+                android:textColor="@color/grey_01"
+                android:textSize="18sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_test_item_info"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="80"
+                android:fontFamily="@font/nanumsquarer"
+                android:gravity="center|right|center_vertical|end"
+                android:padding="10dp"
+                android:textColor="@color/grey_01"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_test_item_result"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="20"
+                android:fontFamily="@font/nanumsquarer"
+                android:gravity="center|right|center_vertical"
+                android:padding="10dp"
+                android:textColor="@color/grey_01"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0"
+            android:gravity="end"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/tv_test_item_command"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="25"
+                android:fontFamily="@font/nanumsquareeb"
+                android:gravity="center_vertical|center"
+                android:padding="10dp"
+                android:textColor="@color/grey_01"
+                android:textSize="24sp"
+                android:visibility="gone" />
+
+            <!--            <TextView-->
+            <!--                android:id="@+id/tv_test_result"-->
+            <!--                android:layout_width="0dp"-->
+            <!--                android:layout_height="fill_parent"-->
+            <!--                android:layout_weight="25"-->
+            <!--                android:fontFamily="@font/nanumsquarer"-->
+            <!--                android:gravity="center_vertical|center"-->
+            <!--                android:padding="10dp"-->
+            <!--                android:text=""-->
+            <!--                android:textColor="@color/grey_01"-->
+            <!--                android:textSize="24sp" />-->
+
+            <TextView
+                android:id="@+id/tv_test_ok_count"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="25"
+                android:fontFamily="@font/nanumsquarer"
+                android:gravity="center_vertical|end"
+                android:padding="10dp"
+                android:text="0"
+                android:textColor="@color/grey_01"
+                android:textSize="24sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_test_ng_count"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="25"
+                android:fontFamily="@font/nanumsquarer"
+                android:gravity="center_vertical|end"
+                android:padding="10dp"
+                android:text="0"
+                android:textColor="@color/grey_01"
+                android:textSize="24sp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="10"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:weightSum="100">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nanumsquarer"
+                android:padding="5dp"
+                android:text="@string/txt_detail"
+                android:textSize="16sp"
+                android:textStyle="bold"></Button>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/vw_custom_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#CCCCCC" />
+
+</LinearLayout>

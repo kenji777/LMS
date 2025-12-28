@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Used to mark views that already have our haptic touch listener installed -->
+    <item type="id" name="tag_haptic_installed" />
+</resources>
+

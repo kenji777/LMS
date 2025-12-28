@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 체크됨 -->
+    <item android:state_checked="true">
+        <layer-list>
+            <!-- 내부 배경 -->
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="#DDDDDD"/> <!-- □ 배경색 -->
+                    <corners android:radius="4dp"/>
+                </shape>
+            </item>
+
+            <!-- 체크 아이콘 -->
+            <item android:gravity="center">
+                <bitmap android:src="@drawable/ic_check_box_white_24dp" />
+            </item>
+        </layer-list>
+    </item>
+
+    <!-- 체크 안됨 -->
+    <item android:state_checked="false">
+        <shape android:shape="rectangle">
+            <solid android:color="#DDDDDD"/>  <!-- 배경색 -->
+            <stroke android:width="2dp" android:color="#FFFFFF"/> <!-- 테두리(흰색) -->
+            <corners android:radius="4dp"/>
+        </shape>
+    </item>
+
+</selector>

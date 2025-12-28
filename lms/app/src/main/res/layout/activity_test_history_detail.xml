@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="0dp"
+    android:paddingTop="0dp"
+    android:paddingRight="0dp"
+    android:paddingBottom="0dp">
+
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/blue_for_ovio"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="107dp"
+            android:layout_height="50dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="0dp"
+            android:src="@drawable/ovio_logo_top"></ImageView>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="20"
+            android:background="@color/blue_for_ovio"
+            android:fontFamily="@font/nanumsquareeb"
+            android:gravity="center_vertical|start"
+            android:paddingLeft="10dp"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:weightSum="100"></TextView>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="8"
+            android:fontFamily="@font/nanumsquarel"
+            android:gravity="center_vertical|end"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="Ver.0.1"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:weightSum="100"
+            android:visibility="gone"></TextView>
+
+        <TextView
+            android:id="@+id/tv_current_version"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="18"
+            android:fontFamily="@font/nanumsquarel"
+            android:gravity="center_vertical|end"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="@string/txt_current_version"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:weightSum="100"></TextView>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingRight="10dp"
+            android:weightSum="100"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/btn_activity_quit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:fontFamily="@font/nanumsquarer"
+                android:background="@color/red_01"
+                android:textColor="@color/white"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:gravity="center"
+                android:text="@string/txt_close_for_button"
+                android:textSize="18sp"
+                android:visibility="gone"
+                android:textStyle="bold"></TextView>
+        </LinearLayout>
+    </LinearLayout>
+    <!-- 타이틀바 -->
+    <LinearLayout
+        android:id="@+id/ll_popup_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey_01"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/tv_popup_header_title"
+            android:layout_width="match_parent"
+            android:layout_height="53dp"
+            android:fontFamily="@font/nanumsquarer"
+            android:gravity="center"
+            android:text="검사 상세 내역"
+            android:textColor="@color/white"
+            android:textSize="32sp" />
+        <LinearLayout
+            android:id="@+id/ll_popup_header_below"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/grey_01"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:padding="0dp"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="0.7"
+                    android:background="@color/grey_01"
+                    android:fontFamily="@font/nanumsquarer"
+                    android:gravity="center"
+                    android:text="@string/txt_test_datetime"
+                    android:textColor="@color/white"
+                    android:textSize="22sp" />
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="0.3"
+                    android:orientation="horizontal"
+                    android:padding="0dp"
+                    android:weightSum="1">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="0.8"
+                        android:background="@color/grey_01"
+                        android:fontFamily="@font/nanumsquarer"
+                        android:gravity="center"
+                        android:text="@string/txt_test_comment"
+                        android:paddingStart="70dp"
+                        android:textColor="@color/white"
+                        android:textSize="22sp" />
+                    <ImageButton
+                        android:id="@+id/ib_test_hisotry_comment"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.1"
+                        android:layout_gravity="end"
+                        android:padding="0dp"
+                        android:backgroundTint="#00FFFFFF"
+                        android:src="@drawable/edit_note_24dp_ffffff_fill0_wght400_grad0_opsz24__1_">
+                    </ImageButton>
+                    <ImageButton
+                        android:id="@+id/ib_test_hisotry_comment_delete"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.1"
+                        android:layout_gravity="end"
+                        android:padding="0dp"
+                        android:backgroundTint="#00FFFFFF"
+                        android:alpha=".3"
+                        android:src="@drawable/delete_24dp_ffffff_fill0_wght400_grad0_opsz24__1_">
+                    </ImageButton>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <!-- //end 타이틀바 -->
+
+    <!-- Notice -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:padding="0dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.7"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="0dp">
+            <ListView
+                android:id="@+id/lv_test_history_detail_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/tv_param_from_parent"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:alpha="0.87"
+                android:gravity="center"
+                android:text="data"
+                android:textColor="#000000"
+                android:textSize="24sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="0dp">
+
+            <EditText
+                android:id="@+id/te_test_detail_comment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="0dp"
+                android:padding="16dp"
+                android:background="#33FFFE91"
+                android:gravity="start|top"
+                android:hint="@string/txt_test_comment"
+                android:textColor="#000000"
+                android:inputType="text"
+                android:textSize="21sp" />
+        </LinearLayout>
+    </LinearLayout>
+    <!-- Notice -->
+</LinearLayout>
+
+    <!--
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="Close Activity"
+        android:src="@drawable/view_timeline_24dp_ffffff_fill0_wght400_grad0_opsz24"
+        app:maxImageSize="40dp"
+        app:backgroundTint="@color/blue_for_ovio"
+        app:tint="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="174dp"
+        android:layout_marginBottom="16dp" />
+    -->
+
+<com.google.android.material.floatingactionbutton.FloatingActionButton
+    android:id="@+id/fab_chart"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:contentDescription="Refresh Activity"
+    android:src="@drawable/area_chart_24dp_ffffff_fill0_wght400_grad0_opsz24"
+    app:maxImageSize="40dp"
+    app:backgroundTint="@color/blue_for_ovio"
+    app:tint="@android:color/white"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    android:layout_marginEnd="95dp"
+    android:layout_marginBottom="16dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="Close Activity"
+        android:src="@drawable/ic_close_white_24dp"
+        app:maxImageSize="40dp"
+        app:backgroundTint="@color/blue_for_ovio"
+        app:tint="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+

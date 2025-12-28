@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="100"
+    android:background="@color/white"
+    android:padding="5dp">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="65dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+        <!-- 체크박스 -->
+        <CheckBox
+            android:id="@+id/cb_item_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:visibility="gone"
+            android:padding="10dp" />
+
+        <!-- 노출 여부 토글 스위치 -->
+        <Switch
+            android:id="@+id/switch_visibility"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:padding="5dp"
+            android:text="노출"
+            android:visibility="gone"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:orientation="horizontal"
+            android:padding="0dp"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/tv_test_history_no"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="100"
+                android:fontFamily="@font/nanumsquarer"
+                android:gravity="center_vertical|center"
+                android:padding="0dp"
+                android:text="00"
+                android:visibility="visible"
+                android:textColor="@color/grey_01"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/tv_test_history_seq"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="100"
+                android:fontFamily="@font/nanumsquarer"
+                android:gravity="center_vertical|center"
+                android:padding="0dp"
+                android:text=""
+                android:visibility="gone"
+                android:textColor="@color/grey_01"
+                android:textSize="22sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="30"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/tv_test_timestamp"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="100"
+                android:fontFamily="@font/nanumsquarer"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/grey_01"
+                android:textSize="24sp" />
+        </LinearLayout>
+
+        <!--
+        <ImageView
+            android:id="@+id/iv_icon"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="30"
+            android:background="#FFD9FA" />
+        -->
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="30"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/tv_test_model_id"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="100"
+                android:fontFamily="@font/nanumsquareeb"
+                android:gravity="start|center_vertical"
+                android:padding="10dp"
+                android:text=""
+                android:visibility="gone"
+                android:textColor="@color/grey_01"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/tv_test_model_name"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="100"
+                android:fontFamily="@font/nanumsquareeb"
+                android:gravity="start|center_vertical"
+                android:padding="10dp"
+                android:text=""
+                android:textColor="@color/grey_01"
+                android:textSize="24sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="40"
+            android:orientation="horizontal"
+            android:weightSum="75" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="25"
+                android:fontFamily="@font/nanumsquareeb"
+                android:gravity="center_vertical|center"
+                android:padding="10dp"
+                android:textColor="@color/grey_01"
+                android:visibility="gone"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/tv_test_result"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="25"
+                android:fontFamily="@font/nanumsquarer"
+                android:gravity="center_vertical|center"
+                android:padding="10dp"
+                android:text=""
+                android:textColor="@color/grey_01"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/tv_test_ok_count"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="25"
+                android:fontFamily="@font/nanumsquarer"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="0"
+                android:textColor="@color/grey_01"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/tv_test_ng_count"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="25"
+                android:fontFamily="@font/nanumsquarer"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="0"
+                android:textColor="@color/grey_01"
+                android:textSize="24sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="10"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:weightSum="100" >
+
+            <Button
+                android:id="@+id/btn_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:fontFamily="@font/nanumsquarer"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:text="@string/txt_detail"></Button>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

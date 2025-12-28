@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="100"
+    android:background="@color/white"
+    android:padding="0dp">
+
+    <LinearLayout
+        android:id="@+id/ll_model_list_item"
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="10"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/tv_test_model_no"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="100"
+                android:fontFamily="@font/nanumsquarer"
+                android:gravity="center_vertical|center"
+                android:padding="0dp"
+                android:text="00"
+                android:visibility="visible"
+                android:textColor="@color/grey_01"
+                android:textSize="36sp" />
+        </LinearLayout>
+
+        <!--
+        <ImageView
+            android:id="@+id/iv_icon"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="30"
+            android:background="#FFD9FA" />
+        -->
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="90"
+            android:padding="10dp"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/tv_test_model_id"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="100"
+                android:fontFamily="@font/nanumsquareeb"
+                android:gravity="start|center_vertical"
+                android:padding="10dp"
+                android:text=""
+                android:visibility="gone"
+                android:textColor="@color/grey_01"
+                android:textSize="36sp" />
+
+            <TextView
+                android:id="@+id/tv_test_model_name"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="70"
+                android:fontFamily="@font/nanumsquareeb"
+                android:gravity="start|center_vertical"
+                android:padding="10dp"
+                android:text=""
+                android:textColor="@color/grey_01"
+                android:textSize="36sp"
+                android:weightSum="100" />
+
+            <TextView
+                android:id="@+id/tv_test_brand_name"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="20"
+                android:fontFamily="@font/nanumsquarer"
+                android:gravity="end|center_vertical"
+                android:padding="10dp"
+                android:text=""
+                android:textColor="@color/grey_01"
+                android:textSize="36sp"
+                android:weightSum="100" />
+
+            <TextView
+                android:id="@+id/tv_test_model_nationality_name"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="10"
+                android:fontFamily="@font/nanumsquarer"
+                android:gravity="end|center_vertical"
+                android:padding="10dp"
+                android:text=""
+                android:textColor="@color/grey_01"
+                android:textSize="36sp"
+                android:weightSum="100" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0"
+            android:padding="10dp"
+            android:orientation="horizontal"
+            android:weightSum="100" >
+
+            <TextView
+                android:id="@+id/tv_test_model_version"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="100"
+                android:fontFamily="@font/nanumsquarer"
+                android:gravity="center_vertical|center"
+                android:padding="10dp"
+                android:text=""
+                android:textColor="@color/grey_01"
+                android:textSize="36sp"  />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

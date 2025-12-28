@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="0dp"
+    android:paddingTop="0dp"
+    android:paddingRight="0dp"
+    android:paddingBottom="0dp">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:stretchColumns="*">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/blue_for_ovio"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="107dp"
+                android:layout_height="50dp"
+                android:paddingLeft="0dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:visibility="visible"
+                android:src="@drawable/ovio_logo_top" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingRight="10dp"
+                android:weightSum="100">
+                <TextView
+                    android:id="@+id/tv_unit_id"
+                    android:fontFamily="@font/nanumsquarel"
+                    android:layout_weight="8"
+                    android:gravity="center_vertical|start"
+                    android:padding="10dp"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:weightSum="100"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_current_version"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="8"
+                android:fontFamily="@font/nanumsquarel"
+                android:gravity="center_vertical|end"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/txt_current_version"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:weightSum="100" />
+        </LinearLayout>
+    </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+            <!-- 타이틀바 -->
+            <LinearLayout
+                android:id="@+id/ll_popup_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/grey_01"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/tv_popup_header_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="53dp"
+                    android:fontFamily="@font/nanumsquarer"
+                    android:gravity="center"
+                    android:text="@string/txt_test_model_list"
+                    android:textColor="@color/white"
+                    android:textSize="32sp" />
+            </LinearLayout>
+            <!-- //end 타이틀바 -->
+        </TableRow>
+
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+            <!-- Notice -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="0dp">
+
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="65dp"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="10"
+                        android:orientation="horizontal"
+                        android:padding="0dp"
+                        android:weightSum="100">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="100"
+                            android:background="@color/grey_01"
+                            android:fontFamily="@font/nanumsquarer"
+                            android:gravity="center_vertical|center"
+                            android:padding="0dp"
+                            android:text="@string/txt_no"
+                            android:textColor="@color/white"
+                            android:textSize="22sp" />
+                    </LinearLayout>
+
+                    <!--
+                    <ImageView
+                        android:id="@+id/iv_icon"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="30"
+                        android:background="#FFD9FA" />
+                    -->
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="90"
+                        android:orientation="horizontal"
+                        android:weightSum="100">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="100"
+                            android:background="@color/grey_01"
+                            android:fontFamily="@font/nanumsquarer"
+                            android:gravity="center|center_vertical"
+                            android:padding="10dp"
+                            android:text="@string/txt_model_name"
+                            android:textColor="@color/white"
+                            android:textSize="22sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="20"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:weightSum="100" >
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="fill_parent"
+                            android:background="@color/grey_01"
+                            android:fontFamily="@font/nanumsquarer"
+                            android:gravity="center_vertical|center"
+                            android:padding="0dp"
+                            android:text="@string/txt_client_name"
+                            android:textColor="@color/white"
+                            android:textSize="22sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="10"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:weightSum="100" >
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="fill_parent"
+                            android:background="@color/grey_01"
+                            android:fontFamily="@font/nanumsquarer"
+                            android:gravity="center_vertical|center"
+                            android:padding="0dp"
+                            android:text="@string/txt_natinality"
+                            android:textColor="@color/white"
+                            android:textSize="22sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:weightSum="100" >
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="fill_parent"
+                            android:background="@color/grey_01"
+                            android:fontFamily="@font/nanumsquarer"
+                            android:gravity="center_vertical|center"
+                            android:padding="0dp"
+                            android:text="@string/txt_version"
+                            android:textColor="@color/white"
+                            android:textSize="22sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <ListView
+                    android:id="@+id/lv_process_result_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/tv_param_from_parent"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:alpha="0.87"
+                    android:gravity="center"
+                    android:text="data"
+                    android:textColor="#000000"
+                    android:textSize="24sp" />
+            </LinearLayout>
+        </TableRow>
+    </TableLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="Close Activity"
+        android:src="@drawable/view_timeline_24dp_ffffff_fill0_wght400_grad0_opsz24"
+        app:maxImageSize="40dp"
+        app:backgroundTint="@color/blue_for_ovio"
+        app:tint="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="174dp"
+        android:layout_marginBottom="16dp"
+        android:visibility="visible" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="Close Activity"
+        android:src="@drawable/ic_close_white_24dp"
+        app:maxImageSize="40dp"
+        app:backgroundTint="@color/blue_for_ovio"
+        app:tint="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="Refresh Activity"
+        android:src="@drawable/ic_reflesh_white_24dp"
+        app:maxImageSize="40dp"
+        app:backgroundTint="@color/blue_for_ovio"
+        app:tint="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="95dp"
+        android:layout_marginBottom="16dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_plc_memory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="PLC Memory Viewer"
+        android:src="@drawable/memory_alt_24dp_ffffff_fill0_wght400_grad0_opsz24"
+        app:maxImageSize="40dp"
+        app:backgroundTint="@color/blue_for_ovio"
+        app:tint="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="253dp"
+        android:layout_marginBottom="16dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>

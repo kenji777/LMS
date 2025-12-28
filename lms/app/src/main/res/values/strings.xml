@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name" translatable="false">LINE MONITORING SYSTEM ver.0.1</string>
+    <string name="sEnabled">Enabled</string>
+    <string name="sDisabled">Disabled</string>
+    <string name="test_start" translatable="false">검사 시작</string>
+
+    <string name="txt_close_for_button">닫 기</string>
+    <string name="txt_change">수정</string>
+    <string name="txt_detail">상세</string>
+    <string name="txt_sensor_check">센서검사</string>
+    <string name="txt_alert">알 림</string>
+    <string name="txt_test_line">검사라인</string>
+    <string name="txt_test_buttons">검사버튼</string>
+    <string name="txt_test_result">검사결과</string>
+    <string name="txt_test_model">검사모델</string>
+    <string name="txt_setting_datetime">설정일시</string>
+    <string name="txt_test_datetime">검사일시</string>
+    <string name="txt_test_comment">특이사항</string>
+    <string name="txt_model_name">모델명</string>
+    <string name="txt_client_name">고객명</string>
+    <string name="txt_natinality">국가</string>
+    <string name="txt_no">No</string>
+    <string name="txt_ok">OK</string>
+    <string name="txt_ng">NG</string>
+    <string name="txt_test_process_list">검사항목</string>
+    <string name="txt_received_no_data_from_product">제품으로부터 수신된 신호가 없습니다.</string>
+    <string name="txt_version">버 전</string>
+    <string name="txt_test_history">검사 이력</string>
+    <string name="txt_system_setting">시스템 설정</string>
+    <string name="txt_system_setting_item_name">설정 아이템</string>
+    <string name="txt_system_setting_item_value">설정값</string>
+    <string name="txt_start_time">시작시간 : </string>
+    <string name="txt_pre_process">검사전</string>
+    <string name="txt_test_model_list">검사 모델</string>
+    <string name="txt_total_spent_time">소요시간 : </string>
+    <string name="txt_confirm_for_button">확 인</string>
+    <string name="txt_watt">소비전력(W)</string>
+    <string name="txt_current_version">Version.0.0.251217.test.01</string>
+
+    <!-- Strings used for fragments for navigation -->
+
+</resources>

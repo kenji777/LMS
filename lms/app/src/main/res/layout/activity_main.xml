@@ -1,0 +1,2677 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="0dp"
+    android:paddingTop="0dp"
+    android:paddingRight="0dp"
+    android:paddingBottom="0dp"
+    tools:context="itf.com.app.lms.MainActivity">
+    <!--    android:paddingLeft="@dimen/activity_horizontal_margin"-->
+    <!--    android:paddingTop="@dimen/activity_vertical_margin"-->
+    <!--    android:paddingRight="@dimen/activity_horizontal_margin"-->
+    <!--    android:paddingBottom="@dimen/activity_vertical_margin"-->
+
+
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:id="@+id/fab_watt_chart"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentEnd="true"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_marginRight="30dp"-->
+<!--        android:layout_marginBottom="30dp"-->
+<!--        app:backgroundTint="@color/white"-->
+<!--        android:src="@drawable/baseline_insert_chart_outlined_180"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        android:visibility="gone"-->
+<!--        app:layout_constraintRight_toRightOf="parent"></com.google.android.material.floatingactionbutton.FloatingActionButton>-->
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:stretchColumns="*">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+            <LinearLayout
+                android:id="@+id/ll_top_header"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/blue_for_ovio"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="107dp"
+                    android:layout_height="50dp"
+                    android:paddingLeft="0dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:visibility="visible"
+                    android:src="@drawable/ovio_logo_top"></ImageView>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:orientation="horizontal"
+                    android:paddingRight="10dp">
+                    <TextView
+                        android:id="@+id/tv_unit_id"
+                        android:fontFamily="@font/nanumsquarel"
+                        android:gravity="center_vertical|start"
+                        android:padding="10dp"
+                        android:textAlignment="textStart"
+                        android:text=""
+                        android:textColor="@color/white"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content" />
+                    <TextView
+                        android:id="@+id/tv_unit_message"
+                        android:fontFamily="@font/nanumsquarel"
+                        android:gravity="center_vertical|start"
+                        android:padding="10dp"
+                        android:text=""
+                        android:textColor="@color/white"
+                        android:textAlignment="textStart"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3.5"
+                    android:gravity="end"
+                    android:orientation="horizontal"
+                    android:paddingRight="10dp"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/tv_current_version"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/nanumsquarel"
+                        android:gravity="center_vertical|end"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:text="@string/txt_current_version"
+                        android:textColor="@color/white"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:weightSum="100" />
+
+                    <TextView
+                        android:id="@+id/tv_run_ws_ramp"
+                        android:layout_width="50dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center"
+                        android:background="@color/red_01"
+                        android:padding="5dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        android:text="SVR"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_connect_bt_ramp"
+                        android:layout_width="50dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:background="@color/red_01"
+                        android:padding="5dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        android:text="BT"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_connect_plc_ramp"
+                        android:layout_width="50dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:background="@color/red_01"
+                        android:padding="5dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        android:text="USB"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!--
+            <TextView
+                android:id="@+id/tv_current_model_name"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="30"
+                android:background="@color/red_02"
+                android:fontFamily="@font/nanumsquareeb"
+                android:gravity="center_vertical|start"
+                android:paddingLeft="10dp"
+                android:text="CHP-6000"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:weightSum="100" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="10"
+                android:fontFamily="@font/nanumsquarer"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:text="@string/txt_total_spent_time"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:weightSum="100" />
+
+            <TextView
+                android:id="@+id/tv_process_spent_duration"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="6"
+                android:fontFamily="@font/nanumsquareeb"
+                android:gravity="center_vertical|end"
+                android:paddingLeft="10dp"
+                android:text="0"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:weightSum="100" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:fontFamily="@font/nanumsquarel"
+                android:gravity="center_vertical|start"
+                android:paddingLeft="10dp"
+                android:text="sec"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:weightSum="100" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:fontFamily="@font/nanumsquarel"
+                android:gravity="center_vertical|center"
+                android:paddingLeft="10dp"
+                android:text=" / "
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:weightSum="100" />
+
+            <TextView
+                android:id="@+id/tv_process_total_duration"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="6"
+                android:fontFamily="@font/nanumsquareeb"
+                android:gravity="center_vertical|end"
+                android:paddingLeft="10dp"
+                android:text="0"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:weightSum="100" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:fontFamily="@font/nanumsquarel"
+                android:gravity="center_vertical|start"
+                android:paddingLeft="10dp"
+                android:text="sec"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:weightSum="100" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:visibility="gone"
+                android:layout_height="match_parent"
+                android:layout_weight="10"
+                android:fontFamily="@font/nanumsquarer"
+                android:gravity="center_vertical|end"
+                android:paddingLeft="10dp"
+                android:text="@string/txt_start_time"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:weightSum="100" />
+
+            <TextView
+                android:id="@+id/tv_process_start_datetime"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="18"
+                android:fontFamily="@font/nanumsquarel"
+                android:gravity="center_vertical|end"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="00/00/00 00:00:00"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:weightSum="100" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingRight="10dp"
+                android:weightSum="100">
+
+                <TextView
+                    android:id="@+id/tv_connect_product_ramp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:background="@color/white"
+                    android:padding="5dp"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_connect_plc_ramp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:background="@color/white"
+                    android:layout_marginLeft="10dp"
+                    android:padding="5dp"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="8"
+                android:fontFamily="@font/nanumsquarel"
+                android:gravity="center_vertical|end"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="Ver.0.1"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:weightSum="100" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="10"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingRight="10dp"
+                android:weightSum="100">
+
+                <TextView
+                    android:id="@+id/btn_activity_quit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:fontFamily="@font/nanumsquarer"
+                    android:background="@color/red_01"
+                    android:textColor="@color/white"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:gravity="center"
+                    android:text="@string/txt_close_for_button"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            -->
+            </LinearLayout>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="0dp"
+                            android:textAlignment="center">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="48dp"
+                                android:background="@color/black"
+                                android:fontFamily="@font/nanumsquarer"
+                                android:gravity="center"
+                                android:letterSpacing="-0.05"
+                                android:padding="10dp"
+                                android:text="항 목"
+                                android:textAlignment="center"
+                                android:textColor="#FCFFFFFF"
+                                android:textSize="24sp"
+                                android:weightSum="100" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/drawable_border_04"
+                                android:fontFamily="@font/nanumsquareb"
+                                android:gravity="center"
+                                android:letterSpacing="-0.05"
+                                android:padding="6dp"
+                                android:text="COMP(W)"
+                                android:textAlignment="center"
+                                android:textColor="@color/white"
+                                android:textSize="22sp"
+                                android:weightSum="100" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/drawable_border_04"
+                                android:fontFamily="@font/nanumsquareb"
+                                android:gravity="center"
+                                android:letterSpacing="-0.05"
+                                android:padding="6dp"
+                                android:text="히 터(W)"
+                                android:textAlignment="center"
+                                android:textColor="@color/white"
+                                android:textSize="22sp"
+                                android:weightSum="100" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/drawable_border_04"
+                                android:fontFamily="@font/nanumsquareb"
+                                android:gravity="center"
+                                android:letterSpacing="-0.05"
+                                android:padding="7dp"
+                                android:text="펌 프"
+                                android:textAlignment="center"
+                                android:textColor="@color/white"
+                                android:textSize="22sp"
+                                android:weightSum="100" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".8"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="0dp"
+                            android:textAlignment="center">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="48dp"
+                                android:background="@color/black"
+                                android:fontFamily="@font/nanumsquarer"
+                                android:gravity="center"
+                                android:letterSpacing="-0.05"
+                                android:padding="10dp"
+                                android:text="기준값"
+                                android:textAlignment="center"
+                                android:textColor="#FCFFFFFF"
+                                android:textSize="24sp"
+                                android:weightSum="100" />
+
+                            <TextView
+                                android:id="@+id/tv_comp_value_watt"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/drawable_border_03"
+                                android:fontFamily="@font/nanumsquareb"
+                                android:gravity="center"
+                                android:letterSpacing="-0.05"
+                                android:padding="6dp"
+                                android:text="0"
+                                android:textAlignment="textEnd"
+                                android:textColor="@color/black"
+                                android:textSize="22sp"
+                                android:weightSum="100" />
+
+                            <TextView
+                                android:id="@+id/tv_heater_value_watt"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/drawable_border_03"
+                                android:fontFamily="@font/nanumsquareb"
+                                android:gravity="center"
+                                android:letterSpacing="-0.05"
+                                android:padding="6dp"
+                                android:text="0"
+                                android:textAlignment="textEnd"
+                                android:textColor="@color/black"
+                                android:textSize="22sp"
+                                android:weightSum="100" />
+
+                            <TextView
+                                android:id="@+id/tv_pump_value_watt"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/drawable_border_03"
+                                android:fontFamily="@font/nanumsquareb"
+                                android:gravity="center"
+                                android:letterSpacing="-0.05"
+                                android:padding="7dp"
+                                android:text="0"
+                                android:textAlignment="textEnd"
+                                android:textColor="@color/black"
+                                android:textSize="22sp"
+                                android:weightSum="100" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".8"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="0dp"
+                            android:textAlignment="center">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="48dp"
+                                android:background="@color/black"
+                                android:fontFamily="@font/nanumsquarer"
+                                android:gravity="center"
+                                android:letterSpacing="-0.05"
+                                android:padding="10dp"
+                                android:text="상한값"
+                                android:textAlignment="center"
+                                android:textColor="#FCFFFFFF"
+                                android:textSize="24sp"
+                                android:weightSum="100" />
+
+                            <TextView
+                                android:id="@+id/tv_comp_upper_value_watt"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/drawable_border_03"
+                                android:fontFamily="@font/nanumsquareb"
+                                android:gravity="center"
+                                android:letterSpacing="-0.05"
+                                android:padding="6dp"
+                                android:text="0"
+                                android:textAlignment="textEnd"
+                                android:textColor="@color/black"
+                                android:textSize="22sp"
+                                android:weightSum="100" />
+
+                            <TextView
+                                android:id="@+id/tv_heater_upper_value_watt"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/drawable_border_03"
+                                android:fontFamily="@font/nanumsquareb"
+                                android:gravity="center"
+                                android:letterSpacing="-0.05"
+                                android:padding="6dp"
+                                android:text="0"
+                                android:textAlignment="textEnd"
+                                android:textColor="@color/black"
+                                android:textSize="22sp"
+                                android:weightSum="100" />
+
+                            <TextView
+                                android:id="@+id/tv_pump_upper_value_watt"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/drawable_border_03"
+                                android:fontFamily="@font/nanumsquareb"
+                                android:gravity="center"
+                                android:letterSpacing="-0.05"
+                                android:padding="7dp"
+                                android:text="0"
+                                android:textAlignment="textEnd"
+                                android:textColor="@color/black"
+                                android:textSize="22sp"
+                                android:weightSum="100" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".8"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="0dp"
+                            android:textAlignment="center">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="48dp"
+                                android:background="@color/black"
+                                android:fontFamily="@font/nanumsquarer"
+                                android:gravity="center"
+                                android:letterSpacing="-0.05"
+                                android:padding="10dp"
+                                android:text="하한값"
+                                android:textAlignment="center"
+                                android:textColor="#FCFFFFFF"
+                                android:textSize="24sp"
+                                android:weightSum="100" />
+
+                            <TextView
+                                android:id="@+id/tv_comp_lower_value_watt"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/drawable_border_03"
+                                android:fontFamily="@font/nanumsquareb"
+                                android:gravity="center"
+                                android:letterSpacing="-0.05"
+                                android:padding="6dp"
+                                android:text="0"
+                                android:textAlignment="textEnd"
+                                android:textColor="@color/black"
+                                android:textSize="22sp"
+                                android:weightSum="100" />
+
+                            <TextView
+                                android:id="@+id/tv_heater_lower_value_watt"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/drawable_border_03"
+                                android:fontFamily="@font/nanumsquareb"
+                                android:gravity="center"
+                                android:letterSpacing="-0.05"
+                                android:padding="6dp"
+                                android:text="0"
+                                android:textAlignment="textEnd"
+                                android:textColor="@color/black"
+                                android:textSize="22sp"
+                                android:weightSum="100" />
+
+                            <TextView
+                                android:id="@+id/tv_pump_lower_value_watt"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/drawable_border_03"
+                                android:fontFamily="@font/nanumsquareb"
+                                android:gravity="center"
+                                android:letterSpacing="-0.05"
+                                android:padding="7dp"
+                                android:text="0"
+                                android:textAlignment="textEnd"
+                                android:textColor="@color/black"
+                                android:textSize="22sp"
+                                android:weightSum="100" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".8"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="0dp"
+                            android:textAlignment="center">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="48dp"
+                                android:background="@color/black"
+                                android:fontFamily="@font/nanumsquarer"
+                                android:gravity="center"
+                                android:letterSpacing="-0.05"
+                                android:padding="10dp"
+                                android:text="측정값"
+                                android:textAlignment="center"
+                                android:textColor="#FCFFFFFF"
+                                android:textSize="24sp"
+                                android:weightSum="100" />
+
+                            <TextView
+                                android:id="@+id/tv_comp_watt_value"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/drawable_border_03"
+                                android:fontFamily="@font/nanumsquareb"
+                                android:gravity="center"
+                                android:letterSpacing="-0.05"
+                                android:padding="6dp"
+                                android:text="0"
+                                android:textAlignment="textEnd"
+                                android:textColor="@color/black"
+                                android:textSize="22sp"
+                                android:weightSum="100" />
+
+                            <TextView
+                                android:id="@+id/tv_heater_watt_value"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/drawable_border_03"
+                                android:fontFamily="@font/nanumsquareb"
+                                android:gravity="center"
+                                android:letterSpacing="-0.05"
+                                android:padding="6dp"
+                                android:text="0"
+                                android:textAlignment="textEnd"
+                                android:textColor="@color/black"
+                                android:textSize="22sp"
+                                android:weightSum="100" />
+
+                            <TextView
+                                android:id="@+id/tv_pump_watt_value"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/drawable_border_03"
+                                android:fontFamily="@font/nanumsquareb"
+                                android:gravity="center"
+                                android:letterSpacing="-0.05"
+                                android:padding="7dp"
+                                android:text="0"
+                                android:textAlignment="textEnd"
+                                android:textColor="@color/black"
+                                android:textSize="22sp"
+                                android:weightSum="100" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1.2"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="0dp"
+                            android:textAlignment="center">
+
+                            <!-- 1/4 높이 -->
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="48dp"
+                                android:background="@color/black"
+                                android:fontFamily="@font/nanumsquarer"
+                                android:gravity="center"
+                                android:letterSpacing="-0.05"
+                                android:padding="10dp"
+                                android:text="소비전력(W)"
+                                android:textAlignment="center"
+                                android:textColor="#FCFFFFFF"
+                                android:textSize="24sp" />
+
+                            <!-- 3/4 높이 -->
+                            <TextView
+                                android:id="@+id/tv_watt_value"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="3"
+                                android:background="@drawable/drawable_border_03"
+                                android:fontFamily="@font/nanumsquareeb"
+                                android:gravity="center"
+                                android:paddingTop="4dp"
+                                android:paddingRight="10dp"
+                                android:paddingBottom="4dp"
+                                android:text="0"
+                                android:textAlignment="textEnd"
+                                android:textSize="60sp" />
+
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1.2"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="0dp"
+                            android:textAlignment="center">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="48dp"
+                                android:background="@color/black"
+                                android:fontFamily="@font/nanumsquarer"
+                                android:gravity="center"
+                                android:letterSpacing="-0.05"
+                                android:padding="10dp"
+                                android:text="진행시간(초)"
+                                android:textAlignment="center"
+                                android:textColor="#FCFFFFFF"
+                                android:textSize="24sp"
+                                android:weightSum="100" />
+
+                            <TextView
+                                android:id="@+id/tv_ellapsed_time_cnt"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="3"
+                                android:background="@drawable/drawable_border_03"
+                                android:fontFamily="@font/nanumsquareeb"
+                                android:gravity="center"
+                                android:paddingTop="4dp"
+                                android:paddingRight="10dp"
+                                android:paddingBottom="4dp"
+                                android:text="0"
+                                android:textAlignment="textEnd"
+                                android:textSize="60sp"
+                                android:weightSum="100" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1.2"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="0dp"
+                            android:textAlignment="center">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="48dp"
+                                android:background="@color/black"
+                                android:fontFamily="@font/nanumsquarer"
+                                android:gravity="center"
+                                android:letterSpacing="-0.05"
+                                android:padding="10dp"
+                                android:text="설정시간(초)"
+                                android:textAlignment="center"
+                                android:textColor="#FCFFFFFF"
+                                android:textSize="24sp"
+                                android:weightSum="100" />
+
+                            <TextView
+                                android:id="@+id/tv_total_time_cnt"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="3"
+                                android:background="@drawable/drawable_border_03"
+                                android:fontFamily="@font/nanumsquareeb"
+                                android:gravity="center"
+                                android:paddingTop="4dp"
+                                android:paddingRight="10dp"
+                                android:paddingBottom="4dp"
+                                android:text="0"
+                                android:textAlignment="textEnd"
+                                android:textSize="60sp"
+                                android:weightSum="100" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="0dp"
+                            android:textAlignment="center">
+
+                            <TextView
+                                android:id="@+id/btn_test_restart"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="9"
+                                android:background="@color/green_02"
+                                android:fontFamily="@font/nanumsquareb"
+                                android:gravity="center"
+                                android:letterSpacing="-0.05"
+                                android:padding="10dp"
+                                android:text="재검사"
+                                android:textAlignment="center"
+                                android:textColor="@color/white"
+                                android:textSize="32sp"
+                                android:weightSum="100" />
+
+                            <TextView
+                                android:id="@+id/btn_test_history_list"
+                                android:layout_width="match_parent"
+                                android:layout_height="78dp"
+                                android:layout_weight="9"
+                                android:background="@color/grey_02"
+                                android:fontFamily="@font/nanumsquareb"
+                                android:gravity="center"
+                                android:letterSpacing="-0.05"
+                                android:padding="10dp"
+                                android:text="리 셋"
+                                android:textAlignment="center"
+                                android:textColor="@color/white"
+                                android:textSize="32sp"
+                                android:weightSum="100"
+                                android:visibility="gone" />
+
+<!--                            <TextView-->
+<!--                                android:id="@+id/btn_test_history_list"-->
+<!--                                android:layout_width="match_parent"-->
+<!--                                android:layout_height="78dp"-->
+<!--                                android:layout_weight="9"-->
+<!--                                android:background="@color/grey_02"-->
+<!--                                android:fontFamily="@font/nanumsquareb"-->
+<!--                                android:gravity="center"-->
+<!--                                android:letterSpacing="-0.05"-->
+<!--                                android:padding="10dp"-->
+<!--                                android:text="목 록"-->
+<!--                                android:textAlignment="center"-->
+<!--                                android:textColor="@color/white"-->
+<!--                                android:textSize="32sp"-->
+<!--                                android:weightSum="100" />-->
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+                    </TableRow>
+                </TableLayout>
+            </LinearLayout>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="0dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="0"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/activity_vertical_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:paddingBottom="@dimen/activity_vertical_margin">
+
+                    <!--            <CheckBox-->
+                    <!--                android:id="@+id/checkbox_led_1"-->
+                    <!--                android:layout_width="wrap_content"-->
+                    <!--                android:layout_height="wrap_content"-->
+                    <!--                android:layout_gravity="center_horizontal"-->
+                    <!--                android:layout_marginTop="10dp"-->
+                    <!--                android:checked="false"-->
+                    <!--                android:scaleX="1.7"-->
+                    <!--                android:scaleY="1.7"-->
+                    <!--                android:text="@string/test_start"-->
+                    <!--                android:textStyle="bold" />-->
+
+                    <Button
+                        android:id="@+id/btn_test_start"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/test_start" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.1"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="RX:"
+                            android:textStyle="bold" />
+
+                        <!--        <TextView-->
+                        <!--            android:id="@+id/read_buffer"-->
+                        <!--            android:layout_width="wrap_content"-->
+                        <!--            android:layout_height="wrap_content"-->
+                        <!--            android:layout_weight="0.9"-->
+                        <!--            android:ellipsize="end"-->
+                        <!--            android:maxLines="1"-->
+                        <!--            android:text="&lt;Read Buffer>" />-->
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical">
+
+                        <!--        <TextView-->
+                        <!--            android:layout_width="wrap_content"-->
+                        <!--            android:layout_height="wrap_content"-->
+                        <!--            android:layout_weight="0.1"-->
+                        <!--            android:ellipsize="end"-->
+                        <!--            android:maxLines="1"-->
+                        <!--            android:text="RX:"-->
+                        <!--            android:textStyle="bold" />-->
+
+                        <TextView
+                            android:id="@+id/read_buffer"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:layout_weight="1"
+                            android:clickable="true"
+                            android:contextClickable="true"
+                            android:focusable="auto"
+                            android:scrollbars="vertical"
+                            android:singleLine="false"
+                            android:text="&lt;PBA Read Buffer>"
+                            android:textIsSelectable="true"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/receive_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:layout_weight="1"
+                            android:clickable="true"
+                            android:contextClickable="true"
+                            android:focusable="auto"
+                            android:scrollbars="vertical"
+                            android:singleLine="false"
+                            android:text="&lt;PLC Read Buffer>"
+                            android:textIsSelectable="true"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.1"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="Status:"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/bluetooth_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.9"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="&lt;Bluetooth Status>" />
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/scan"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:text="Bluetooth ON"
+                        tools:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/off"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:text="Bluetooth OFF"
+                        tools:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/btn_search"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Show searched Devices" />
+
+                    <Button
+                        android:id="@+id/paired_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Show paired Devices" />
+
+                    <Button
+                        android:id="@+id/discover"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:text="Discover New Devices"
+                        tools:visibility="gone" />
+
+                    <ListView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:choiceMode="singleChoice" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight=".9"
+                    android:orientation="vertical">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_log"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/tv_log"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scrollbars="vertical"
+                            android:text=""
+                            android:textSize="11sp" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/white"
+                        android:orientation="vertical"
+                        android:padding="0dp"
+                        android:weightSum="100">
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="50"
+                                android:orientation="vertical"
+                                android:weightSum="100">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="45dp"
+                                    android:layout_weight="100"
+                                    android:background="@color/black"
+                                    android:fontFamily="@font/nanumsquarer"
+                                    android:gravity="center|center_vertical"
+                                    android:padding="5dp"
+                                    android:text="시리얼 번호"
+                                    android:textColor="@color/white"
+                                    android:textSize="18sp" />
+
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:padding="10dp">
+
+                                    <TextView
+                                        android:id="@+id/tv_serial_no"
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_gravity="start"
+                                        android:layout_weight="25"
+                                        android:ellipsize="end"
+                                        android:fontFamily="@font/nanumsquareb"
+                                        android:gravity="bottom|end"
+                                        android:hint="POP SERIAL NO"
+                                        android:letterSpacing="-0.05"
+                                        android:maxLines="1"
+                                        android:paddingLeft="10dp"
+                                        android:paddingTop="5dp"
+                                        android:paddingBottom="10dp"
+                                        android:text=""
+                                        android:textAlignment="textStart"
+                                        android:textColor="@color/black"
+                                        android:textSize="45sp"
+                                        android:weightSum="0" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="50"
+                                android:orientation="vertical"
+                                android:weightSum="100">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="45dp"
+                                    android:layout_weight="100"
+                                    android:background="@color/black"
+                                    android:fontFamily="@font/nanumsquarer"
+                                    android:gravity="center|center_vertical"
+                                    android:padding="5dp"
+                                    android:text="@string/txt_model_name"
+                                    android:textColor="@color/white"
+                                    android:textSize="18sp" />
+
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:padding="10dp">
+
+                                    <TextView
+                                        android:id="@+id/tv_model_name"
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_gravity="start"
+                                        android:layout_weight="25"
+                                        android:ellipsize="end"
+                                        android:fontFamily="@font/nanumsquareb"
+                                        android:gravity="bottom|end"
+                                        android:letterSpacing="-0.05"
+                                        android:maxLines="1"
+                                        android:paddingLeft="10dp"
+                                        android:paddingTop="5dp"
+                                        android:paddingBottom="10dp"
+                                        android:text="@string/txt_test_model"
+                                        android:textAlignment="textStart"
+                                        android:textSize="45sp"
+                                        android:weightSum="0" />
+
+                                    <TextView
+                                        android:id="@+id/tv_model_nationality"
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_gravity="start"
+                                        android:layout_weight="15"
+                                        android:ellipsize="end"
+                                        android:fontFamily="@font/nanumsquareb"
+                                        android:gravity="bottom|end"
+                                        android:letterSpacing="-0.05"
+                                        android:maxLines="1"
+                                        android:paddingLeft="10dp"
+                                        android:paddingTop="5dp"
+                                        android:paddingBottom="10dp"
+                                        android:text="수출향"
+                                        android:textAlignment="textEnd"
+                                        android:textSize="45sp"
+                                        android:weightSum="0" />
+
+                                    <TextView
+                                        android:id="@+id/tv_model_id"
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_gravity="start"
+                                        android:layout_weight="0"
+                                        android:ellipsize="end"
+                                        android:fontFamily="@font/nanumsquarer"
+                                        android:gravity="bottom|end"
+                                        android:letterSpacing="-0.05"
+                                        android:maxLines="1"
+                                        android:paddingLeft="10dp"
+                                        android:paddingTop="5dp"
+                                        android:paddingBottom="10dp"
+                                        android:text="@string/txt_test_model"
+                                        android:textAlignment="textStart"
+                                        android:textSize="45sp"
+                                        android:weightSum="0" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="50"
+                                android:orientation="vertical"
+                                android:weightSum="100">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="45dp"
+                                    android:layout_weight="100"
+                                    android:background="@color/black"
+                                    android:fontFamily="@font/nanumsquarer"
+                                    android:gravity="center|center_vertical"
+                                    android:padding="5dp"
+                                    android:text="@string/txt_test_process_list"
+                                    android:textColor="@color/white"
+                                    android:textSize="18sp" />
+
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:padding="10dp">
+
+                                    <TextView
+                                        android:id="@+id/tv_current_process"
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_gravity="start"
+                                        android:layout_weight="25"
+                                        android:ellipsize="end"
+                                        android:fontFamily="@font/nanumsquareb"
+                                        android:gravity="bottom|end"
+                                        android:letterSpacing="-0.05"
+                                        android:maxLines="1"
+                                        android:paddingLeft="10dp"
+                                        android:paddingTop="5dp"
+                                        android:paddingBottom="10dp"
+                                        android:text="@string/txt_test_process_list"
+                                        android:textAlignment="textStart"
+                                        android:textSize="45sp"
+                                        android:weightSum="0" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="50"
+                                android:orientation="vertical"
+                                android:weightSum="100">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="45dp"
+                                    android:background="@color/black"
+                                    android:fontFamily="@font/nanumsquarer"
+                                    android:gravity="center|center_vertical"
+                                    android:padding="5dp"
+                                    android:text="@string/txt_ok"
+                                    android:textColor="@color/white"
+                                    android:textSize="18sp" />
+
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:padding="10dp">
+
+                                    <TextView
+                                        android:id="@+id/tv_test_ok_cnt"
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_gravity="start"
+                                        android:layout_weight="25"
+                                        android:fontFamily="@font/nanumsquareeb"
+                                        android:gravity="bottom|end"
+                                        android:letterSpacing="-0.05"
+                                        android:padding="0dp"
+                                        android:text="0"
+                                        android:textAlignment="center"
+                                        android:textSize="50sp"
+                                        android:weightSum="0" />
+
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="50"
+                                android:orientation="vertical"
+                                android:weightSum="100">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="45dp"
+                                    android:background="@color/black"
+                                    android:fontFamily="@font/nanumsquarer"
+                                    android:gravity="center|center_vertical"
+                                    android:padding="5dp"
+                                    android:text="@string/txt_ng"
+                                    android:textColor="@color/white"
+                                    android:textSize="18sp" />
+
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:padding="10dp">
+
+                                    <TextView
+                                        android:id="@+id/tv_test_ng_cnt"
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_gravity="start"
+                                        android:layout_weight="25"
+                                        android:fontFamily="@font/nanumsquareeb"
+                                        android:gravity="bottom|end"
+                                        android:letterSpacing="-0.05"
+                                        android:padding="0dp"
+                                        android:text="0"
+                                        android:textAlignment="center"
+                                        android:textSize="50sp"
+                                        android:weightSum="0" />
+
+                                </LinearLayout>
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <!--                        <LinearLayout-->
+                        <!--                            android:layout_width="fill_parent"-->
+                        <!--                            android:layout_height="wrap_content"-->
+                        <!--                            android:layout_gravity="center"-->
+                        <!--                            android:orientation="horizontal">-->
+
+                        <!--                            &lt;!&ndash;-->
+                        <!--                                <LinearLayout-->
+                        <!--                                    android:layout_width="0dp"-->
+                        <!--                                    android:layout_height="match_parent"-->
+                        <!--                                    android:layout_weight="50"-->
+                        <!--                                    android:orientation="vertical"-->
+                        <!--                                    android:weightSum="100">-->
+
+                        <!--                                        <TextView-->
+                        <!--                                            android:layout_width="match_parent"-->
+                        <!--                                            android:layout_height="45dp"-->
+                        <!--                                            android:background="@color/black"-->
+                        <!--                                            android:fontFamily="@font/nanumsquarer"-->
+                        <!--                                            android:gravity="center|center_vertical"-->
+                        <!--                                            android:padding="5dp"-->
+                        <!--                                            android:text="@string/txt_ok"-->
+                        <!--                                            android:textColor="@color/white"-->
+                        <!--                                            android:textSize="18sp" />-->
+
+
+                        <!--                                        <LinearLayout-->
+                        <!--                                            android:layout_width="match_parent"-->
+                        <!--                                            android:layout_height="wrap_content"-->
+                        <!--                                            android:orientation="horizontal"-->
+                        <!--                                            android:padding="0dp">-->
+
+                        <!--                                            <TextView-->
+                        <!--                                                android:id="@+id/btn_test_ok_cnt"-->
+                        <!--                                                android:layout_width="0dp"-->
+                        <!--                                                android:layout_height="match_parent"-->
+                        <!--                                                android:layout_gravity="start"-->
+                        <!--                                                android:layout_weight="25"-->
+                        <!--                                                android:fontFamily="@font/nanumsquareeb"-->
+                        <!--                                                android:gravity="bottom|end"-->
+                        <!--                                                android:letterSpacing="-0.05"-->
+                        <!--                                                android:padding="0dp"-->
+                        <!--                                                android:text="0"-->
+                        <!--                                                android:textAlignment="center"-->
+                        <!--                                                android:textSize="50sp"-->
+                        <!--                                                android:weightSum="0" />-->
+
+                        <!--                                        </LinearLayout>-->
+                        <!--                                </LinearLayout>-->
+                        <!--                                &ndash;&gt;-->
+
+                        <!--                            <LinearLayout-->
+                        <!--                                android:layout_width="0dp"-->
+                        <!--                                android:layout_height="match_parent"-->
+                        <!--                                android:layout_weight="50"-->
+                        <!--                                android:orientation="vertical"-->
+                        <!--                                android:weightSum="100">-->
+
+                        <!--                                <LinearLayout-->
+                        <!--                                    android:layout_width="match_parent"-->
+                        <!--                                    android:layout_height="match_parent"-->
+                        <!--                                    android:orientation="horizontal"-->
+                        <!--                                    android:padding="0dp">-->
+
+                        <!--                                    <TextView-->
+                        <!--                                        android:layout_width="0dp"-->
+                        <!--                                        android:layout_height="55dp"-->
+                        <!--                                        android:layout_gravity="start"-->
+                        <!--                                        android:layout_weight="25"-->
+                        <!--                                        android:fontFamily="@font/nanumsquareeb"-->
+                        <!--                                        android:gravity="center"-->
+                        <!--                                        android:textColor="@color/white"-->
+                        <!--                                        android:letterSpacing="-0.05"-->
+                        <!--                                        android:padding="0dp"-->
+                        <!--                                        android:text="설 정"-->
+                        <!--                                        android:background="@color/blue_01"-->
+                        <!--                                        android:textAlignment="center"-->
+                        <!--                                        android:textSize="24sp"-->
+                        <!--                                        android:weightSum="0" />-->
+
+                        <!--                                </LinearLayout>-->
+                        <!--                            </LinearLayout>-->
+
+                        <!--                            <LinearLayout-->
+                        <!--                                android:layout_width="0dp"-->
+                        <!--                                android:layout_height="match_parent"-->
+                        <!--                                android:layout_weight="50"-->
+                        <!--                                android:orientation="vertical"-->
+                        <!--                                android:weightSum="100">-->
+
+                        <!--                                <LinearLayout-->
+                        <!--                                    android:layout_width="match_parent"-->
+                        <!--                                    android:layout_height="match_parent"-->
+                        <!--                                    android:orientation="horizontal"-->
+                        <!--                                    android:padding="0dp">-->
+
+                        <!--                                    <TextView-->
+                        <!--                                        android:id="@+id/btn_test_ng_cnt"-->
+                        <!--                                        android:layout_width="0dp"-->
+                        <!--                                        android:layout_height="55dp"-->
+                        <!--                                        android:layout_gravity="start"-->
+                        <!--                                        android:layout_weight="25"-->
+                        <!--                                        android:fontFamily="@font/nanumsquareeb"-->
+                        <!--                                        android:gravity="center"-->
+                        <!--                                        android:textColor="@color/white"-->
+                        <!--                                        android:letterSpacing="-0.05"-->
+                        <!--                                        android:padding="0dp"-->
+                        <!--                                        android:text="재시작"-->
+                        <!--                                        android:background="@color/red_02"-->
+                        <!--                                        android:textAlignment="center"-->
+                        <!--                                        android:textSize="24sp"-->
+                        <!--                                        android:weightSum="0" />-->
+
+                        <!--                                </LinearLayout>-->
+                        <!--                            </LinearLayout>-->
+
+                        <!--                        </LinearLayout>-->
+
+
+                        <!--
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_gravity="center"
+                            android:orientation="horizontal">
+
+                            <androidx.appcompat.widget.LinearLayoutCompat
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="horizontal"
+                                android:padding="0dp"
+                                android:textAlignment="center">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="9"
+                                    android:background="@color/black"
+                                    android:fontFamily="@font/nanumsquarer"
+                                    android:gravity="center"
+                                    android:letterSpacing="-0.05"
+                                    android:padding="10dp"
+                                    android:text="온도"
+                                    android:textAlignment="center"
+                                    android:textColor="#FCFFFFFF"
+                                    android:textSize="18sp"
+                                    android:weightSum="100" />
+
+                                <TextView
+                                    android:id="@+id/tv_temperature"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="4.5"
+                                    android:background="@drawable/drawable_border_03"
+                                    android:fontFamily="@font/nanumsquareeb"
+                                    android:gravity="center"
+                                    android:paddingTop="4dp"
+                                    android:paddingRight="10dp"
+                                    android:paddingBottom="4dp"
+                                    android:text="0"
+                                    android:textAlignment="textEnd"
+                                    android:textSize="32sp"
+                                    android:weightSum="100" />
+                            </androidx.appcompat.widget.LinearLayoutCompat>
+
+                            <androidx.appcompat.widget.LinearLayoutCompat
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="horizontal"
+                                android:padding="0dp"
+                                android:textAlignment="center">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="9"
+                                    android:background="@color/black"
+                                    android:fontFamily="@font/nanumsquarer"
+                                    android:gravity="center"
+                                    android:letterSpacing="-0.05"
+                                    android:padding="10dp"
+                                    android:text="소비전력"
+                                    android:textAlignment="center"
+                                    android:textColor="#FCFFFFFF"
+                                    android:textSize="18sp"
+                                    android:weightSum="100" />
+
+                                <TextView
+                                    android:id="@+id/tv_watt"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="4.5"
+                                    android:background="@drawable/drawable_border_03"
+                                    android:fontFamily="@font/nanumsquareeb"
+                                    android:gravity="center"
+                                    android:paddingTop="4dp"
+                                    android:paddingRight="10dp"
+                                    android:paddingBottom="4dp"
+                                    android:text="0"
+                                    android:textAlignment="textEnd"
+                                    android:textSize="32sp"
+                                    android:weightSum="100" />
+                            </androidx.appcompat.widget.LinearLayoutCompat>
+                        </LinearLayout>
+                        -->
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="50"
+                                android:orientation="vertical"
+                                android:weightSum="100">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="45dp"
+                                    android:layout_weight="100"
+                                    android:background="@color/black"
+                                    android:fontFamily="@font/nanumsquarer"
+                                    android:gravity="center|center_vertical"
+                                    android:padding="5dp"
+                                    android:text="온도"
+                                    android:textColor="@color/white"
+                                    android:textSize="18sp" />
+
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:padding="10dp">
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_gravity="start"
+                                        android:layout_weight="25"
+                                        android:fontFamily="@font/nanumsquareeb"
+                                        android:gravity="bottom|end"
+                                        android:letterSpacing="-0.05"
+                                        android:paddingLeft="10dp"
+                                        android:paddingTop="5dp"
+                                        android:paddingBottom="10dp"
+                                        android:text="0"
+                                        android:textAlignment="textEnd"
+                                        android:textSize="85sp"
+                                        android:weightSum="0" />
+
+                                    <TextView
+                                        android:id="@+id/tv_temperature"
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="10"
+                                        android:fontFamily="@font/nanumsquarel"
+                                        android:gravity="bottom|start"
+                                        android:letterSpacing="-0.05"
+                                        android:paddingLeft="10dp"
+                                        android:paddingTop="5dp"
+                                        android:paddingBottom="10dp"
+                                        android:text="℃"
+                                        android:textAlignment="textStart"
+                                        android:textSize="34sp"
+                                        android:weightSum="0" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="50"
+                                android:orientation="vertical"
+                                android:weightSum="100">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="45dp"
+                                    android:layout_weight="100"
+                                    android:background="@color/black"
+                                    android:fontFamily="@font/nanumsquarer"
+                                    android:gravity="center|center_vertical"
+                                    android:padding="5dp"
+                                    android:text="@string/txt_watt"
+                                    android:textColor="@color/white"
+                                    android:textSize="18sp" />
+
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:padding="10dp">
+
+                                    <TextView
+                                        android:id="@+id/tv_watt"
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_gravity="start"
+                                        android:layout_weight="25"
+                                        android:fontFamily="@font/nanumsquareeb"
+                                        android:gravity="bottom|end"
+                                        android:letterSpacing="-0.05"
+                                        android:paddingLeft="10dp"
+                                        android:paddingTop="5dp"
+                                        android:paddingBottom="10dp"
+                                        android:text="0"
+                                        android:textAlignment="textEnd"
+                                        android:textSize="85sp"
+                                        android:weightSum="0" />
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="10"
+                                        android:fontFamily="@font/nanumsquarel"
+                                        android:gravity="bottom|start"
+                                        android:letterSpacing="-0.05"
+                                        android:paddingLeft="10dp"
+                                        android:paddingTop="5dp"
+                                        android:paddingBottom="10dp"
+                                        android:text="Watt"
+                                        android:textAlignment="textStart"
+                                        android:textSize="34sp"
+                                        android:weightSum="0" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/white"
+                                android:orientation="vertical"
+                                android:padding="0dp"
+                                android:weightSum="100">
+
+                                <LinearLayout
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="45dp"
+                                    android:layout_gravity="center"
+                                    android:orientation="horizontal">
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="5"
+                                        android:orientation="horizontal"
+                                        android:padding="0dp"
+                                        android:weightSum="100">
+
+                                        <TextView
+                                            android:layout_width="0dp"
+                                            android:layout_height="fill_parent"
+                                            android:layout_weight="100"
+                                            android:background="@color/black"
+                                            android:fontFamily="@font/nanumsquarer"
+                                            android:gravity="center_vertical|center"
+                                            android:padding="5dp"
+                                            android:text="@string/txt_test_history"
+                                            android:textColor="@color/white"
+                                            android:textSize="18sp" />
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+                        </LinearLayout>
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:orientation="vertical"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="0dp"
+                            android:paddingRight="0dp"
+                            android:backgroundTint="@color/white"
+                            android:background="@color/white"
+                            android:layout_gravity="bottom|end"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:paddingBottom="0dp"
+                            android:visibility="gone">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="10dp"
+                                android:gravity="bottom"
+                                android:text="Powered by ITFACTORY, 2025-2026"/>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="1.5"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:orientation="vertical"
+                        android:padding="0dp"
+                        android:weightSum="100">
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="45dp"
+                            android:layout_gravity="center"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="5"
+                                android:orientation="horizontal"
+                                android:padding="0dp"
+                                android:weightSum="100">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="fill_parent"
+                                    android:layout_weight="100"
+                                    android:background="@color/black"
+                                    android:fontFamily="@font/nanumsquarer"
+                                    android:gravity="center_vertical|center"
+                                    android:padding="5dp"
+                                    android:text="@string/txt_no"
+                                    android:textColor="@color/white"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="15"
+                                android:orientation="horizontal"
+                                android:padding="0dp"
+                                android:visibility="gone"
+                                android:weightSum="100">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="fill_parent"
+                                    android:layout_weight="100"
+                                    android:background="@color/grey_01"
+                                    android:fontFamily="@font/nanumsquarer"
+                                    android:gravity="center"
+                                    android:text="@string/txt_test_datetime"
+                                    android:textColor="@color/white"
+                                    android:textSize="22sp" />
+                            </LinearLayout>
+
+                            <!--
+                            <ImageView
+                                android:id="@+id/iv_icon"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="30"
+                                android:background="#FFD9FA" />
+                            -->
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="30"
+                                android:orientation="horizontal"
+                                android:weightSum="100">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="fill_parent"
+                                    android:layout_weight="100"
+                                    android:background="@color/black"
+                                    android:fontFamily="@font/nanumsquarer"
+                                    android:gravity="center|center_vertical"
+                                    android:padding="5dp"
+                                    android:text="@string/txt_test_process_list"
+                                    android:textColor="@color/white"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="horizontal"
+                                android:visibility="gone"
+                                android:weightSum="100">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="fill_parent"
+                                    android:layout_weight="25"
+                                    android:background="@color/grey_01"
+                                    android:fontFamily="@font/nanumsquarer"
+                                    android:gravity="center_vertical|center"
+                                    android:padding="10dp"
+                                    android:text="@string/txt_test_line"
+                                    android:textColor="@color/white"
+                                    android:textSize="22sp" />
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="fill_parent"
+                                    android:layout_weight="25"
+                                    android:background="@color/grey_01"
+                                    android:fontFamily="@font/nanumsquarer"
+                                    android:gravity="center_vertical|center"
+                                    android:padding="10dp"
+                                    android:text="@string/txt_test_result"
+                                    android:textColor="@color/white"
+                                    android:textSize="22sp" />
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="fill_parent"
+                                    android:layout_weight="25"
+                                    android:background="@color/grey_01"
+                                    android:fontFamily="@font/nanumsquarer"
+                                    android:gravity="center_vertical|center"
+                                    android:padding="10dp"
+                                    android:text="@string/txt_ok"
+                                    android:textColor="@color/white"
+                                    android:textSize="22sp" />
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="fill_parent"
+                                    android:layout_weight="25"
+                                    android:background="@color/grey_01"
+                                    android:fontFamily="@font/nanumsquarer"
+                                    android:gravity="center_vertical|center"
+                                    android:padding="0dp"
+                                    android:text="@string/txt_ng"
+                                    android:textColor="@color/white"
+                                    android:textSize="22sp" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_weight="15"
+                                android:gravity="center"
+                                android:orientation="horizontal"
+                                android:weightSum="100">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="fill_parent"
+                                    android:background="@color/black"
+                                    android:fontFamily="@font/nanumsquarer"
+                                    android:gravity="center_vertical|center"
+                                    android:padding="5dp"
+                                    android:text="@string/txt_test_result"
+                                    android:textColor="@color/white"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <ListView
+                        android:id="@+id/lst_test_item"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:divider="@null"
+                        android:dividerHeight="0dp"></ListView>
+                </LinearLayout>
+            </LinearLayout>
+        </TableRow>
+    </TableLayout>
+
+    <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+    <!--        android:id="@+id/cl_test_result"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:paddingTop="195dp"-->
+    <!--        android:background="#BB000000"-->
+    <!--        android:visibility="gone">-->
+ㄹ뮤
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_test_result"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#BB000000"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="1000dp"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="65"
+                            android:background="@color/black"
+                            android:fontFamily="@font/nanumsquarer"
+                            android:gravity="center"
+                            android:letterSpacing="-0.05"
+                            android:padding="10dp"
+                            android:text="@string/txt_test_result"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="32sp"
+                            android:weightSum="100" />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:background="@color/white"
+                        android:padding="0dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="100"
+                            android:orientation="vertical"
+                            android:weightSum="100">
+
+                            <TextView
+                                android:id="@+id/tv_popup_process_result"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/nanumsquareeb"
+                                android:gravity="center"
+                                android:text="OK"
+                                android:textSize="250sp" />
+
+                            <TextView
+                                android:id="@+id/tv_result_message"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/nanumsquarer"
+                                android:gravity="center"
+                                android:padding="5dp"
+                                android:text="OK"
+                                android:visibility="gone"
+                                android:textSize="31sp" />
+
+                            <LinearLayout
+                                android:id="@+id/ll_process_result_count"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:visibility="visible"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="50"
+                                    android:orientation="vertical"
+                                    android:weightSum="100">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:background="@drawable/drawable_border_04"
+                                        android:fontFamily="@font/nanumsquarer"
+                                        android:gravity="center"
+                                        android:letterSpacing="-0.05"
+                                        android:padding="10dp"
+                                        android:text="COMP(W)"
+                                        android:textAlignment="center"
+                                        android:textColor="#FCFFFFFF"
+                                        android:textSize="28sp"
+                                        android:weightSum="100" />
+
+                                    <TextView
+                                        android:id="@+id/tv_popup_process_result_comp_value"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:background="@drawable/drawable_border_03"
+                                        android:fontFamily="@font/nanumsquareeb"
+                                        android:gravity="center"
+                                        android:padding="5dp"
+                                        android:text="0"
+                                        android:textAlignment="center"
+                                        android:textSize="96sp" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="50"
+                                    android:orientation="vertical"
+                                    android:weightSum="100">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:background="@drawable/drawable_border_04"
+                                        android:fontFamily="@font/nanumsquarer"
+                                        android:gravity="center"
+                                        android:letterSpacing="-0.05"
+                                        android:padding="10dp"
+                                        android:text="히 터(W)"
+                                        android:textAlignment="center"
+                                        android:textColor="#FCFFFFFF"
+                                        android:textSize="28sp"
+                                        android:weightSum="100" />
+
+                                    <TextView
+                                        android:id="@+id/tv_popup_process_result_heater_value"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:background="@drawable/drawable_border_03"
+                                        android:fontFamily="@font/nanumsquareeb"
+                                        android:gravity="center"
+                                        android:padding="5dp"
+                                        android:text="0"
+                                        android:textAlignment="center"
+                                        android:textSize="96sp" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/ll_ng_list"
+                                android:layout_width="match_parent"
+                                android:layout_height="300dp"
+                                android:layout_weight="50"
+                                android:orientation="vertical"
+                                android:visibility="gone"
+                                android:weightSum="100">
+
+
+
+
+
+
+
+
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@color/white"
+                                    android:orientation="vertical"
+                                    android:padding="0dp"
+                                    android:weightSum="100">
+
+                                    <LinearLayout
+                                        android:layout_width="fill_parent"
+                                        android:layout_height="45dp"
+                                        android:layout_gravity="center"
+                                        android:orientation="horizontal">
+
+                                        <LinearLayout
+                                            android:layout_width="0dp"
+                                            android:layout_height="match_parent"
+                                            android:layout_weight="5"
+                                            android:orientation="horizontal"
+                                            android:padding="0dp"
+                                            android:weightSum="100">
+
+                                            <TextView
+                                                android:layout_width="0dp"
+                                                android:layout_height="fill_parent"
+                                                android:layout_weight="100"
+                                                android:background="@color/black"
+                                                android:fontFamily="@font/nanumsquarer"
+                                                android:gravity="center_vertical|center"
+                                                android:padding="5dp"
+                                                android:text="@string/txt_no"
+                                                android:textColor="@color/white"
+                                                android:textSize="18sp" />
+                                        </LinearLayout>
+
+                                        <LinearLayout
+                                            android:layout_width="0dp"
+                                            android:layout_height="match_parent"
+                                            android:layout_weight="30"
+                                            android:orientation="horizontal"
+                                            android:weightSum="100">
+
+                                            <TextView
+                                                android:layout_width="0dp"
+                                                android:layout_height="fill_parent"
+                                                android:layout_weight="100"
+                                                android:background="@color/black"
+                                                android:fontFamily="@font/nanumsquarer"
+                                                android:gravity="center|center_vertical"
+                                                android:padding="5dp"
+                                                android:text="@string/txt_test_process_list"
+                                                android:textColor="@color/white"
+                                                android:textSize="18sp" />
+                                        </LinearLayout>
+
+                                        <LinearLayout
+                                            android:layout_width="0dp"
+                                            android:layout_height="match_parent"
+                                            android:layout_gravity="center"
+                                            android:layout_weight="15"
+                                            android:gravity="center"
+                                            android:orientation="horizontal"
+                                            android:weightSum="100">
+
+                                            <TextView
+                                                android:layout_width="match_parent"
+                                                android:layout_height="fill_parent"
+                                                android:background="@color/black"
+                                                android:fontFamily="@font/nanumsquarer"
+                                                android:gravity="center_vertical|center"
+                                                android:padding="5dp"
+                                                android:text="@string/txt_test_result"
+                                                android:textColor="@color/white"
+                                                android:textSize="18sp" />
+                                        </LinearLayout>
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                <ListView
+                                    android:id="@+id/lv_ng_list"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"></ListView>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </TableRow>
+
+                    <!-- 닫기 버튼 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <Button
+                            android:id="@+id/btn_test_result_close"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end|center_vertical"
+                            android:background="@color/blue_for_ovio"
+                            android:fontFamily="@font/nanumsquarer"
+                            android:padding="10dp"
+                            android:text="@string/txt_confirm_for_button"
+                            android:textColor="@color/white"
+                            android:textSize="24sp"
+                            android:textStyle="bold"></Button>
+                    </LinearLayout>
+                </TableLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_alert"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#BB000000"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="1000dp"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/tv_alert_title"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="65"
+                            android:background="@color/grey_01"
+                            android:fontFamily="@font/nanumsquarer"
+                            android:gravity="center"
+                            android:letterSpacing="-0.05"
+                            android:padding="10dp"
+                            android:text="@string/txt_alert"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="32sp"
+                            android:weightSum="100" />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:background="@color/white"
+                        android:padding="0dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="100"
+                            android:orientation="vertical"
+                            android:weightSum="100">
+
+                            <TextView
+                                android:id="@+id/tv_alert_message"
+                                android:layout_width="match_parent"
+                                android:layout_height="200dp"
+                                android:fontFamily="@font/nanumsquarer"
+                                android:gravity="center"
+                                android:text="OK"
+                                android:textSize="32sp" />
+                        </LinearLayout>
+                    </TableRow>
+
+                    <!-- 닫기 버튼 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <Button
+                            android:id="@+id/btn_alert_close"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end|center_vertical"
+                            android:background="@color/default_button_color"
+                            android:fontFamily="@font/nanumsquarer"
+                            android:padding="10dp"
+                            android:text="@string/txt_confirm_for_button"
+                            android:textColor="@color/white"
+                            android:textSize="24sp"
+                            android:textStyle="bold"></Button>
+                    </LinearLayout>
+                </TableLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_dialog_for_preprocess"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#BB000000"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="1000dp"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/tv_dialog_barcode"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="65"
+                            android:background="#333333"
+                            android:fontFamily="@font/nanumsquarer"
+                            android:gravity="center"
+                            android:letterSpacing="-0.05"
+                            android:padding="10dp"
+                            android:text="BARCODE"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="98sp"
+                            android:weightSum="100" />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/tv_dialog_title"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="65"
+                            android:background="@color/grey_01"
+                            android:fontFamily="@font/nanumsquarer"
+                            android:gravity="center"
+                            android:letterSpacing="-0.05"
+                            android:padding="10dp"
+                            android:text="@string/txt_sensor_check"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="32sp"
+                            android:weightSum="100" />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/tr_preprocess_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:background="@color/white"
+                        android:padding="0dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="100"
+                            android:orientation="vertical"
+                            android:weightSum="100">
+
+                            <TextView
+                                android:id="@+id/tv_dialog_message"
+                                android:layout_width="match_parent"
+                                android:layout_height="200dp"
+                                android:fontFamily="@font/nanumsquarer"
+                                android:gravity="center"
+                                android:padding="10dp"
+                                android:text=""
+                                android:textSize="72sp" />
+                        </LinearLayout>
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:background="@color/white"
+                        android:padding="0dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="100"
+                            android:orientation="vertical"
+                            android:weightSum="100">
+
+                            <TextView
+                                android:id="@+id/tv_dialog_time_count"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/nanumsquarer"
+                                android:gravity="center"
+                                android:padding="10dp"
+                                android:text="0 / 0"
+                                android:visibility="gone"
+                                android:textSize="42sp" />
+                        </LinearLayout>
+                    </TableRow>
+
+                    <!-- 닫기 버튼 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:visibility="gone"
+                        android:padding="10dp">
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end|center_vertical"
+                            android:background="@color/default_button_color"
+                            android:fontFamily="@font/nanumsquarer"
+                            android:padding="10dp"
+                            android:text="@string/txt_confirm_for_button"
+                            android:textColor="@color/white"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </TableLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_dialog_for_in_progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#4D03A9F4"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_dialog_for_in_progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:text="9999999999"
+                android:textColor="@color/white"
+                android:textSize="204sp" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_dialog_for_logger"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#CCFFFFFF"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_dialog_for_logger_watt"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="20dp"
+                android:textAlignment="textStart"
+                android:text="9999999999"
+                android:textColor="@color/black"
+                android:scrollbars="vertical|horizontal"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/tv_dialog_for_logger_temp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="20dp"
+                android:textAlignment="textStart"
+                android:text="9999999999"
+                android:textColor="@color/black"
+                android:scrollbars="vertical|horizontal"
+                android:textSize="24sp" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_control_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="Control Mode Toggle"
+        android:src="@drawable/remote_gen_24dp_ffffff_fill0_wght400_grad0_opsz24"
+        app:maxImageSize="40dp"
+        app:backgroundTint="@color/blue_for_ovio"
+        app:tint="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/fab_close"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="Close Activity"
+        android:src="@drawable/ic_close_white_24dp"
+        app:maxImageSize="40dp"
+        app:backgroundTint="@color/blue_for_ovio"
+        app:tint="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
